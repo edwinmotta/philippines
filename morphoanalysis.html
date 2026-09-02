@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorphoMaster - English Morphology & Sentence Analysis Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('library')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-brand-500/20">
+                    M
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">MorphoMaster</span>
+                    <span class="block text-[10px] font-semibold text-brand-400 tracking-wider uppercase">English Morphology Lab</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-1 bg-slate-800/60 p-1 rounded-xl border border-slate-700/50">
+                <button onclick="switchTab('library')" id="nav-library" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-white bg-brand-600 shadow-sm flex items-center space-x-1.5">
+                    <i class="fa-solid fa-book-open text-xs"></i>
+                    <span>Affix Library</span>
+                </button>
+                <button onclick="switchTab('word-lab')" id="nav-word-lab" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-flask text-xs"></i>
+                    <span>Word Analysis Lab</span>
+                </button>
+                <button onclick="switchTab('sentence-lab')" id="nav-sentence-lab" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-align-left text-xs"></i>
+                    <span>Sentence Analysis Lab</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="nav-quiz" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-graduation-cap text-xs"></i>
+                    <span>Quiz Hub</span>
+                </button>
+                <button onclick="switchTab('theory')" id="nav-theory" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-lightbulb text-xs"></i>
+                    <span>Theory Rules</span>
+                </button>
+                <button onclick="switchTab('stats')" id="nav-stats" class="px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-chart-pie text-xs"></i>
+                    <span>Stats</span>
+                </button>
+            </nav>
+
+            <!-- Quick Controls -->
+            <div class="flex items-center space-x-3">
+                <button id="sound-toggle-btn" onclick="toggleAudio()" title="Toggle Sound Effects" class="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition">
+                    <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+                <div class="bg-slate-800/80 border border-slate-700 rounded-xl px-3 py-1.5 flex items-center space-x-2">
+                    <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+                    <span id="streak-counter" class="text-xs font-bold text-amber-400">1 Day Streak</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Bar -->
+        <div class="flex lg:hidden border-t border-slate-800 overflow-x-auto custom-scrollbar p-2 space-x-2">
+            <button onclick="switchTab('library')" id="mnav-library" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-600 text-white whitespace-nowrap">Library</button>
+            <button onclick="switchTab('word-lab')" id="mnav-word-lab" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap">Word Lab</button>
+            <button onclick="switchTab('sentence-lab')" id="mnav-sentence-lab" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap">Sentence Lab</button>
+            <button onclick="switchTab('quiz')" id="mnav-quiz" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap">Quiz Hub</button>
+            <button onclick="switchTab('theory')" id="mnav-theory" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap">Theory</button>
+            <button onclick="switchTab('stats')" id="mnav-stats" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap">Stats</button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: LIBRARY VIEW -->
+        <section id="tab-library" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-800/40 p-6 rounded-2xl border border-slate-700/60 backdrop-blur-sm">
+                <div>
+                    <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <span>Master Morphology Library</span>
+                        <span id="total-count-badge" class="text-xs bg-brand-500/20 text-brand-300 border border-brand-500/30 px-2.5 py-0.5 rounded-full">0 entries</span>
+                    </h1>
+                    <p class="text-slate-400 text-sm mt-1">Explore all prefixes and suffixes with definitions, origins, and source examples.</p>
+                </div>
+
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="library-search" oninput="filterLibrary()" placeholder="Search word, affix or meaning..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition">
+                    </div>
+
+                    <select id="library-filter-type" onchange="filterLibrary()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+                        <option value="all">All Morphological Types</option>
+                        <option value="prefix">Prefixes Only</option>
+                        <option value="suffix">Suffixes Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: WORD MORPHOLOGICAL ANALYSIS LAB -->
+        <section id="tab-word-lab" class="hidden space-y-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Header Card -->
+                <div class="bg-slate-800/40 p-6 rounded-2xl border border-slate-700/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-flask text-brand-400"></i>
+                            <span>Single Word Morphological Lab</span>
+                        </h2>
+                        <p class="text-slate-400 text-xs mt-1">Break down words into Base/Stem, Morphemes, Types, and Word Class Transitions (Adjective, Adverb, Noun, Verb).</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-400">Select Practice Word:</span>
+                        <select id="word-lab-selector" onchange="loadWordLabItem(this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-semibold text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Word Practice Interactive Card -->
+                <div class="bg-slate-800 border border-slate-700/80 p-8 rounded-3xl space-y-6 shadow-xl">
+                    <div class="text-center space-y-2 border-b border-slate-700/60 pb-6">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-400 block">Target Word Under Analysis</span>
+                        <div class="flex items-center justify-center space-x-3">
+                            <h3 id="wlab-target-word" class="text-4xl font-extrabold text-white tracking-tight">Quickly</h3>
+                            <button onclick="speakText(document.getElementById('wlab-target-word').innerText)" class="p-2 text-slate-400 hover:text-white transition" title="Listen Pronunciation">
+                                <i class="fa-solid fa-volume-high text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Grid Form -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Free Morpheme / Base -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">1. Base / Stem / Free Morpheme</label>
+                            <input type="text" id="wlab-input-base" placeholder="e.g. Quick" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+
+                        <!-- Bound Morpheme -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">2. Bound Morpheme (Affix)</label>
+                            <input type="text" id="wlab-input-bound" placeholder="e.g. ly" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+
+                        <!-- Affix Position -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">3. Affix Position</label>
+                            <select id="wlab-select-position" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="">-- Choose Position --</option>
+                                <option value="Prefix">Prefix</option>
+                                <option value="Suffix">Suffix</option>
+                            </select>
+                        </div>
+
+                        <!-- Morpheme Type -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">4. Morphological Type</label>
+                            <select id="wlab-select-type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="">-- Choose Type --</option>
+                                <option value="Derivational">Derivational (Changes meaning or word class)</option>
+                                <option value="Inflectional">Inflectional (Refines grammatical info; no class/meaning change)</option>
+                            </select>
+                        </div>
+
+                        <!-- Original Word Class -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">5. Original Word Class (Base Word)</label>
+                            <select id="wlab-select-orig-class" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="">-- Choose Word Class --</option>
+                                <option value="Adjective">Adjective</option>
+                                <option value="Adverb">Adverb</option>
+                                <option value="Noun">Noun</option>
+                                <option value="Verb">Verb</option>
+                            </select>
+                        </div>
+
+                        <!-- Resulting Word Class -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">6. Resulting Word Class (Final Word)</label>
+                            <select id="wlab-select-final-class" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <option value="">-- Choose Word Class --</option>
+                                <option value="Adjective">Adjective</option>
+                                <option value="Adverb">Adverb</option>
+                                <option value="Noun">Noun</option>
+                                <option value="Verb">Verb</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="pt-4 border-t border-slate-700/60 flex items-center gap-4">
+                        <button onclick="checkWordLabAnswer()" class="flex-1 py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-brand-600/30 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Validate Breakdown</span>
+                        </button>
+                        <button onclick="revealWordLabAnswer()" class="px-5 py-3 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold text-sm rounded-xl transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-eye"></i>
+                            <span>Show Solution</span>
+                        </button>
+                    </div>
+
+                    <!-- Feedback & Explanation Box -->
+                    <div id="wlab-feedback" class="hidden p-5 rounded-2xl text-sm font-medium space-y-3">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SENTENCE LEVEL MORPHOLOGICAL ANALYSIS LAB -->
+        <section id="tab-sentence-lab" class="hidden space-y-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Header Card -->
+                <div class="bg-slate-800/40 p-6 rounded-2xl border border-slate-700/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-align-left text-emerald-400"></i>
+                            <span>Sentence Morphological Analysis Lab</span>
+                        </h2>
+                        <p class="text-slate-400 text-xs mt-1">Analyze bound/free morphemes, derivational/inflectional logic, and grammatical reasoning in full context sentences.</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-400">Select Sentence:</span>
+                        <select id="sentence-lab-selector" onchange="loadSentenceLabItem(this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-semibold text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sentence Display Card -->
+                <div class="bg-slate-800 border border-slate-700/80 p-8 rounded-3xl space-y-6 shadow-xl">
+                    <div class="text-center space-y-3 bg-slate-900/80 p-6 rounded-2xl border border-slate-700">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 block">Context Sentence</span>
+                        <h3 id="slab-sentence-text" class="text-2xl font-extrabold text-white">She likes to run <span class="text-amber-400 underline decoration-brand-500 decoration-2">quickly</span></h3>
+                        <p id="slab-target-highlight" class="text-xs text-slate-400">Target word under analysis: <span class="text-brand-300 font-bold">quickly</span></p>
+                    </div>
+
+                    <!-- Analysis Questions -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Target Bound Morpheme -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">1. Target Bound Morpheme</label>
+                            <input type="text" id="slab-input-bound" placeholder="e.g. ly" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+
+                        <!-- Free Morpheme & Class -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">2. Free Morpheme Word</label>
+                            <input type="text" id="slab-input-free" placeholder="e.g. quick" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+
+                        <!-- Morphological Classification -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">3. Morphological Classification</label>
+                            <select id="slab-select-type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- Choose Type --</option>
+                                <option value="Derivational">Derivational</option>
+                                <option value="Inflectional">Inflectional</option>
+                            </select>
+                        </div>
+
+                        <!-- Word Class Shift -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold uppercase text-slate-300">4. Word Class Shift</label>
+                            <select id="slab-select-class-shift" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- Choose Shift --</option>
+                                <option value="Adjective -> Adverb">Adjective -> Adverb</option>
+                                <option value="Noun -> Adjective">Noun -> Adjective</option>
+                                <option value="Adjective -> Noun">Adjective -> Noun</option>
+                                <option value="Verb -> Noun">Verb -> Noun</option>
+                                <option value="None (Adjective -> Adjective)">None (Adjective -> Adjective)</option>
+                                <option value="None (Noun -> Noun)">None (Noun -> Noun)</option>
+                                <option value="None (Verb -> Verb)">None (Verb -> Verb)</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Analytical Reasoning Prompt -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase text-slate-300">5. Select the Morphological & Syntactic Reasoning</label>
+                        <select id="slab-select-reasoning" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="">-- Choose Reasoning --</option>
+                            <!-- Populated dynamically per sentence -->
+                        </select>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="pt-4 border-t border-slate-700/60 flex items-center gap-4">
+                        <button onclick="checkSentenceLabAnswer()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Check Sentence Analysis</span>
+                        </button>
+                        <button onclick="revealSentenceLabAnswer()" class="px-5 py-3 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold text-sm rounded-xl transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <span>Show Full Breakdown</span>
+                        </button>
+                    </div>
+
+                    <!-- Sentence Feedback -->
+                    <div id="slab-feedback" class="hidden p-5 rounded-2xl text-sm font-medium space-y-3">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: QUIZ HUB VIEW -->
+        <section id="tab-quiz" class="hidden space-y-6">
+            <div id="quiz-select-screen" class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-3xl font-extrabold text-white">Interactive Assessment Hub</h2>
+                    <p class="text-slate-400 text-sm">Test your morphological knowledge through multiple challenge modes.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                    <!-- Mode 1 -->
+                    <div onclick="startQuiz('meaning')" class="bg-gradient-to-b from-slate-800 to-slate-800/80 border border-slate-700/80 hover:border-brand-500 p-6 rounded-3xl cursor-pointer transition transform hover:-translate-y-1 hover:shadow-xl space-y-4 group">
+                        <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl group-hover:bg-brand-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Meaning Matcher</h3>
+                            <p class="text-xs text-slate-400 mt-1">Identify the correct meaning of prefixes and suffixes from multiple choices.</p>
+                        </div>
+                        <span class="inline-block text-xs font-semibold text-brand-400 group-hover:translate-x-1 transition">Start Challenge &rarr;</span>
+                    </div>
+
+                    <!-- Mode 2 -->
+                    <div onclick="startQuiz('deconstruct')" class="bg-gradient-to-b from-slate-800 to-slate-800/80 border border-slate-700/80 hover:border-emerald-500 p-6 rounded-3xl cursor-pointer transition transform hover:-translate-y-1 hover:shadow-xl space-y-4 group">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:bg-emerald-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Affix & Word Class Shift</h3>
+                            <p class="text-xs text-slate-400 mt-1">Identify affixes and derivational vs. inflectional shifts (e.g. Adjective to Adverb).</p>
+                        </div>
+                        <span class="inline-block text-xs font-semibold text-emerald-400 group-hover:translate-x-1 transition">Start Challenge &rarr;</span>
+                    </div>
+
+                    <!-- Mode 3 -->
+                    <div onclick="startQuiz('sentence')" class="bg-gradient-to-b from-slate-800 to-slate-800/80 border border-slate-700/80 hover:border-purple-500 p-6 rounded-3xl cursor-pointer transition transform hover:-translate-y-1 hover:shadow-xl space-y-4 group">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl group-hover:bg-purple-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Sentence Analysis Quiz</h3>
+                            <p class="text-xs text-slate-400 mt-1">Classify bound morphemes and grammatical reasoning inside full context sentences.</p>
+                        </div>
+                        <span class="inline-block text-xs font-semibold text-purple-400 group-hover:translate-x-1 transition">Start Challenge &rarr;</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Quiz Screen -->
+            <div id="quiz-active-screen" class="hidden max-w-2xl mx-auto space-y-6">
+                <div class="flex items-center justify-between bg-slate-800/60 p-4 rounded-2xl border border-slate-700">
+                    <button onclick="exitQuiz()" class="text-slate-400 hover:text-white text-xs font-semibold flex items-center space-x-1">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Quit Quiz</span>
+                    </button>
+                    <div class="w-1/2 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="quiz-progress-bar" class="bg-brand-500 h-full transition-all duration-300" style="width: 10%"></div>
+                    </div>
+                    <span id="quiz-score-badge" class="text-xs font-bold text-brand-400">Score: 0/10</span>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700/80 p-8 rounded-3xl space-y-6 shadow-xl">
+                    <div class="space-y-2">
+                        <span id="quiz-question-type" class="text-[11px] font-bold uppercase tracking-wider text-brand-400">QUESTION 1 OF 10</span>
+                        <h3 id="quiz-question-text" class="text-xl font-bold text-white">Question text</h3>
+                    </div>
+
+                    <div id="quiz-options-container" class="space-y-3">
+                        <!-- Injected JS -->
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden p-4 rounded-xl text-sm font-medium"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Results Screen -->
+            <div id="quiz-results-screen" class="hidden max-w-md mx-auto text-center space-y-6 bg-slate-800 border border-slate-700 p-8 rounded-3xl">
+                <div class="w-20 h-20 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30 flex items-center justify-center text-3xl mx-auto">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Quiz Completed!</h2>
+                    <p class="text-slate-400 text-sm mt-1">Here is your morphological proficiency score:</p>
+                </div>
+
+                <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-700/60 space-y-2">
+                    <div id="quiz-final-score" class="text-4xl font-extrabold text-amber-400">8 / 10</div>
+                    <div id="quiz-accuracy-percentage" class="text-xs text-slate-400">80% Accuracy</div>
+                </div>
+
+                <button onclick="exitQuiz()" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-xl transition shadow-lg shadow-brand-600/30">
+                    Return to Quiz Hub
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 5: THEORY & RULES HUB -->
+        <section id="tab-theory" class="hidden space-y-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-slate-800/40 p-6 rounded-2xl border border-slate-700/60 text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-white">Morphological Analysis Rules & Theory</h2>
+                    <p class="text-slate-400 text-sm">Key concepts, distinctions between Derivational and Inflectional morphemes, and valid grammatical Word Classes.</p>
+                </div>
+
+                <!-- 2 Major Morpheme Types Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Derivational Card -->
+                    <div class="bg-gradient-to-br from-slate-800 to-indigo-950/40 p-6 rounded-3xl border border-brand-500/40 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-300 flex items-center justify-center font-bold text-lg">
+                                D
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Derivational Morphemes</h3>
+                                <span class="text-xs text-brand-400 font-semibold">Creates or derives new words</span>
+                            </div>
+                        </div>
+
+                        <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                            <li><strong class="text-white">Alters Meaning or Word Class:</strong> Changes either the primary meaning or shifts the grammatical word class.</li>
+                            <li><strong class="text-white">Prefixes & Suffixes:</strong> In English, derivational morphemes can be either prefixes or suffixes.</li>
+                            <li><strong class="text-white">Class Change Example:</strong> <i>Quick</i> (Adjective) + <i>-ness</i> = <i>Quickness</i> (Noun).</li>
+                            <li><strong class="text-white">Meaning Change Example:</strong> <i>Happy</i> (Adjective) + <i>un-</i> = <i>Unhappy</i> (Adjective - negative connotation).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Inflectional Card -->
+                    <div class="bg-gradient-to-br from-slate-800 to-emerald-950/40 p-6 rounded-3xl border border-emerald-500/40 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-lg">
+                                I
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Inflectional Morphemes</h3>
+                                <span class="text-xs text-emerald-400 font-semibold">Refines grammatical details only</span>
+                            </div>
+                        </div>
+
+                        <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                            <li><strong class="text-white">No Category Change:</strong> Does NOT alter the word class or core meaning of a word.</li>
+                            <li><strong class="text-white">Grammatical Function:</strong> Adds tense, number (plurality), comparison, or aspect.</li>
+                            <li><strong class="text-white">Plural Example:</strong> <i>Cat</i> (Noun) + <i>-s</i> = <i>Cats</i> (Noun).</li>
+                            <li><strong class="text-white">Tense/Degree Example:</strong> <i>Walk</i> + <i>-ed</i> = <i>Walked</i> (Verb); <i>Happy</i> + <i>-er</i> = <i>Happier</i> (Adjective).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Word Classes & Morphemes Matrix -->
+                <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-tags text-amber-400"></i>
+                        <span>The 4 Grammatical Word Classes in our Scope</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-700">
+                            <span class="text-xs font-bold text-amber-400 block uppercase">Adjectives</span>
+                            <span class="text-[11px] text-slate-400 mt-1 block">Describe nouns (e.g. quick, happy)</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-700">
+                            <span class="text-xs font-bold text-indigo-400 block uppercase">Adverbs</span>
+                            <span class="text-[11px] text-slate-400 mt-1 block">Modify verbs/adjectives (e.g. quickly)</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-700">
+                            <span class="text-xs font-bold text-emerald-400 block uppercase">Nouns</span>
+                            <span class="text-[11px] text-slate-400 mt-1 block">People, places, things (e.g. cat, action)</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-700">
+                            <span class="text-xs font-bold text-rose-400 block uppercase">Verbs</span>
+                            <span class="text-[11px] text-slate-400 mt-1 block">Actions or states (e.g. walk, run)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: STATS & PROGRESS DASHBOARD -->
+        <section id="tab-stats" class="hidden space-y-6">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-slate-800/40 p-6 rounded-2xl border border-slate-700/60 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Your Morphological Analytics</h2>
+                        <p class="text-slate-400 text-sm">Track your flashcard mastery and analysis accuracy.</p>
+                    </div>
+                    <button onclick="resetProgress()" class="px-3 py-1.5 text-xs text-rose-400 hover:text-rose-300 border border-rose-500/30 hover:bg-rose-500/10 rounded-xl transition">
+                        Reset Progress
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700/80 space-y-1">
+                        <span class="text-xs font-medium text-slate-400">Total Terms Mastered</span>
+                        <div id="stat-mastered" class="text-3xl font-extrabold text-emerald-400">0</div>
+                        <span class="text-[10px] text-slate-500">Out of 97 entries</span>
+                    </div>
+
+                    <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700/80 space-y-1">
+                        <span class="text-xs font-medium text-slate-400">Quiz Accuracy</span>
+                        <div id="stat-accuracy" class="text-3xl font-extrabold text-brand-400">0%</div>
+                        <span class="text-[10px] text-slate-500">Based on quiz responses</span>
+                    </div>
+
+                    <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700/80 space-y-1">
+                        <span class="text-xs font-medium text-slate-400">Sentence Analyses</span>
+                        <div id="stat-sentences" class="text-3xl font-extrabold text-amber-400">0</div>
+                        <span class="text-[10px] text-slate-500">Sentences deconstructed</span>
+                    </div>
+
+                    <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700/80 space-y-1">
+                        <span class="text-xs font-medium text-slate-400">Current Streak</span>
+                        <div id="stat-streak" class="text-3xl font-extrabold text-indigo-400">1 Days</div>
+                        <span class="text-[10px] text-slate-500">Keep practicing daily!</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700/80 space-y-4">
+                    <h3 class="text-base font-bold text-white">Mastery Breakdown by Affix Type</h3>
+                    <div class="h-64 relative flex items-center justify-center">
+                        <canvas id="progress-canvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 py-6 mt-12 bg-slate-950/50">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1">
+            <p>MorphoMaster - Interactive English Prefixes, Suffixes & Sentence Morphological Analysis Platform</p>
+            <p>Designed with source examples from TestPrepReview, EC English guidelines, and classroom morphological exercises.</p>
+        </div>
+    </footer>
+
+    <script>
+        /* FULL MORPHOLOGY DATABASE (Including source data & classroom terms) */
+        const MORPHOLOGY_DATA = [
+            // Classroom examples
+            { id: "c1", term: "-s", type: "suffix", meaning: "plural or 3rd person singular", examples: ["cats", "likes"], notes: "Inflectional suffix." },
+            { id: "c2", term: "-ly", type: "suffix", meaning: "in the manner of", examples: ["quickly", "kindly"], notes: "Derivational suffix changing adjective to adverb." },
+            { id: "c3", term: "-ed", type: "suffix", meaning: "past tense", examples: ["walked", "cried"], notes: "Inflectional verb suffix." },
+            { id: "c4", term: "-er", type: "suffix", meaning: "comparative degree", examples: ["happier", "faster"], notes: "Inflectional adjective suffix." },
+            { id: "c5", term: "-able", type: "suffix", meaning: "capable of", examples: ["actionable", "washable"], notes: "Derivational suffix changing noun to adjective." },
+            { id: "c6", term: "un-", type: "prefix", meaning: "not, opposite of", examples: ["unhappy", "unlock"], notes: "Derivational prefix changing meaning to negative." },
+            { id: "c7", term: "-ness", type: "suffix", meaning: "state or quality", examples: ["quickness", "kindness"], notes: "Derivational suffix changing adjective to noun." },
+
+            // TestPrepReview Prefixes
+            { id: "p1", term: "a-", type: "prefix", meaning: "in, on, of, up, to", examples: ["abed", "afoot"], notes: "Used to indicate state or direction." },
+            { id: "p2", term: "a-", type: "prefix", meaning: "without, lacking", examples: ["atheist", "agnostic"], notes: "Greek origin meaning 'not' or 'without'." },
+            { id: "p3", term: "ab-", type: "prefix", meaning: "from, away, off", examples: ["abdicate", "abjure"], notes: "Latin origin indicating separation." },
+            { id: "p4", term: "ad-", type: "prefix", meaning: "to, toward", examples: ["advance"], notes: "Latin prefix showing movement towards." },
+            { id: "p5", term: "am-", type: "prefix", meaning: "friend, love", examples: ["amicable", "amatory"], notes: "Relates to affection or friendship." },
+            { id: "p6", term: "ante-", type: "prefix", meaning: "before, previous", examples: ["antecedent", "antedate"], notes: "Indicates priority in time or place." },
+            { id: "p7", term: "anti-", type: "prefix", meaning: "against, opposing", examples: ["antipathy", "antidote", "antisocial"], notes: "Expresses opposition or prevention." },
+            { id: "p8", term: "auto-", type: "prefix", meaning: "self", examples: ["autonomy", "autobiography"], notes: "Refers to oneself." },
+            { id: "p9", term: "belli-", type: "prefix", meaning: "war, warlike", examples: ["bellicose"], notes: "Relates to warfare or hostility." },
+            { id: "p10", term: "bene-", type: "prefix", meaning: "well, good", examples: ["benefit", "benefactor"], notes: "Latin prefix for positive qualities." },
+            { id: "p11", term: "bi-", type: "prefix", meaning: "two", examples: ["bisect", "biennial"], notes: "Indicates two or twice." },
+            { id: "p12", term: "bio-", type: "prefix", meaning: "life", examples: ["biology", "biosphere"], notes: "Greek prefix relating to living organisms." },
+            { id: "p13", term: "cata-", type: "prefix", meaning: "down, away, thoroughly", examples: ["catastrophe", "cataclysm"], notes: "Expresses downward motion or intensity." },
+            { id: "p14", term: "chron-", type: "prefix", meaning: "time", examples: ["chronometer", "synchronize"], notes: "Relates to time measurement." },
+            { id: "p15", term: "circum-", type: "prefix", meaning: "around", examples: ["circumspect", "circumference"], notes: "Latin prefix for surrounding motion." },
+            { id: "p16", term: "com-", type: "prefix", meaning: "with, together, very", examples: ["commotion", "complicate"], notes: "Also appears as con-, col-, cor-." },
+            { id: "p17", term: "contra-", type: "prefix", meaning: "against, opposing", examples: ["contradict", "contravene"], notes: "Indicates opposition." },
+            { id: "p18", term: "cred-", type: "prefix", meaning: "belief, trust", examples: ["credible", "credit"], notes: "Relates to faith or believability." },
+            { id: "p19", term: "de-", type: "prefix", meaning: "from, opposite of", examples: ["depart", "demotivated"], notes: "Indicates removal or opposite state." },
+            { id: "p20", term: "dem-", type: "prefix", meaning: "people", examples: ["demographics", "democracy"], notes: "Greek root for human populations." },
+            { id: "p21", term: "dia-", type: "prefix", meaning: "through, across, apart", examples: ["diameter", "diagnose"], notes: "Indicates passage through." },
+            { id: "p22", term: "dis-", type: "prefix", meaning: "away, off, down, not", examples: ["dissent", "disappear", "disagree"], notes: "Negates the root word." },
+            { id: "p23", term: "epi-", type: "prefix", meaning: "upon", examples: ["epilogue"], notes: "Greek origin for on top or after." },
+            { id: "p24", term: "equi-", type: "prefix", meaning: "equal, equally", examples: ["equivalent"], notes: "Indicates parity." },
+            { id: "p25", term: "ex-", type: "prefix", meaning: "out", examples: ["extract"], notes: "Indicates outward movement." },
+            { id: "p26", term: "for-", type: "prefix", meaning: "away, off, from", examples: ["forget", "forswear"], notes: "Old English prefix." },
+            { id: "p27", term: "fore-", type: "prefix", meaning: "before, previous", examples: ["foretell", "forefathers"], notes: "Indicates front or earlier in time." },
+            { id: "p28", term: "homo-", type: "prefix", meaning: "same, equal", examples: ["homogenized"], notes: "Greek prefix for similarity." },
+            { id: "p29", term: "hyper-", type: "prefix", meaning: "excessive, over", examples: ["hypercritical", "hypertension"], notes: "Indicates beyond normal." },
+            { id: "p30", term: "hypo-", type: "prefix", meaning: "under, beneath", examples: ["hypodermic", "hypothesis"], notes: "Indicates lower than normal." },
+            { id: "p31", term: "im-", type: "prefix", meaning: "not", examples: ["impolite", "impossible"], notes: "Variant of in- used before p, m, b." },
+            { id: "p32", term: "in-", type: "prefix", meaning: "in, into", examples: ["intrude", "invade"], notes: "Indicates inward motion." },
+            { id: "p33", term: "in-", type: "prefix", meaning: "not, opposing", examples: ["incapable", "ineligible"], notes: "Negating prefix." },
+            { id: "p34", term: "inter-", type: "prefix", meaning: "among, between", examples: ["intercede", "interrupt"], notes: "Between different entities." },
+            { id: "p35", term: "intra-", type: "prefix", meaning: "within", examples: ["intramural", "intrastate"], notes: "Inside a single entity." },
+            { id: "p36", term: "magn-", type: "prefix", meaning: "large", examples: ["magnitude", "magnify"], notes: "Latin root for greatness." },
+            { id: "p37", term: "mal-", type: "prefix", meaning: "bad, poorly, not", examples: ["malfunction"], notes: "Indicates bad quality or failure." },
+            { id: "p38", term: "micro-", type: "prefix", meaning: "small", examples: ["microbe", "microscope"], notes: "Greek prefix for tiny size." },
+            { id: "p39", term: "mid-", type: "prefix", meaning: "middle", examples: ["midday"], notes: "Indicates central position." },
+            { id: "p40", term: "mis-", type: "prefix", meaning: "bad, poorly, wrongly", examples: ["misspell", "misfire", "misunderstand"], notes: "Indicates error or wrong action." },
+            { id: "p41", term: "mono-", type: "prefix", meaning: "one, single", examples: ["monogamy", "monologue"], notes: "Greek prefix for singularity." },
+            { id: "p42", term: "mor-", type: "prefix", meaning: "die, death", examples: ["mortality", "mortuary"], notes: "Relates to death." },
+            { id: "p43", term: "neo-", type: "prefix", meaning: "new", examples: ["neolithic", "neoconservative"], notes: "Indicates modern or new form." },
+            { id: "p44", term: "non-", type: "prefix", meaning: "not", examples: ["nonentity", "nonsense"], notes: "Standard negation prefix." },
+            { id: "p45", term: "ob-", type: "prefix", meaning: "against, opposing", examples: ["objection"], notes: "Latin prefix for against." },
+            { id: "p46", term: "omni-", type: "prefix", meaning: "all, everywhere", examples: ["omniscient"], notes: "Latin prefix for universality." },
+            { id: "p47", term: "ortho-", type: "prefix", meaning: "right, straight", examples: ["orthogonal", "orthodox"], notes: "Correct or upright." },
+            { id: "p48", term: "over-", type: "prefix", meaning: "above, excessively", examples: ["overbearing", "overenthusiastic"], notes: "Excessive degree." },
+            { id: "p49", term: "pan-", type: "prefix", meaning: "all, entire", examples: ["panorama", "pandemonium"], notes: "Encompassing everything." },
+            { id: "p50", term: "para-", type: "prefix", meaning: "beside, beyond", examples: ["parallel", "paradox"], notes: "Along with or outside." },
+            { id: "p51", term: "per-", type: "prefix", meaning: "through", examples: ["perceive", "permit"], notes: "Passage through." },
+            { id: "p52", term: "peri-", type: "prefix", meaning: "around", examples: ["periscope", "perimeter"], notes: "Surrounding boundary." },
+            { id: "p53", term: "phil-", type: "prefix", meaning: "love, like", examples: ["philosophy", "philanthropic"], notes: "Affection or affinity." },
+            { id: "p54", term: "poly-", type: "prefix", meaning: "many", examples: ["polymorphous", "polygamous"], notes: "Greek prefix for multiple." },
+            { id: "p55", term: "post-", type: "prefix", meaning: "after, following", examples: ["postpone", "postscript"], notes: "After in time." },
+            { id: "p56", term: "pre-", type: "prefix", meaning: "before, previous", examples: ["prevent", "preclude", "prehistoric"], notes: "Prior in time or rank." },
+            { id: "p57", term: "prim-", type: "prefix", meaning: "first, early", examples: ["primitive", "primary"], notes: "Initial position." },
+            { id: "p58", term: "pro-", type: "prefix", meaning: "forward, in place of", examples: ["propel", "pronoun"], notes: "Advancing forward." },
+            { id: "p59", term: "re-", type: "prefix", meaning: "back, backward, again", examples: ["revoke", "recur", "rewrite"], notes: "Repetition or return." },
+            { id: "p60", term: "retro-", type: "prefix", meaning: "back, backward", examples: ["retrospect", "retrograde"], notes: "Looking behind." },
+            { id: "p61", term: "semi-", type: "prefix", meaning: "half, partly", examples: ["semicircle", "semicolon"], notes: "Partial amount." },
+            { id: "p62", term: "sub-", type: "prefix", meaning: "under, beneath", examples: ["subjugate", "substitute"], notes: "Below or under." },
+            { id: "p63", term: "super-", type: "prefix", meaning: "above, extra, beyond", examples: ["supersede", "supernumerary", "superhuman"], notes: "Exceeding standard." },
+            { id: "p64", term: "sym-", type: "prefix", meaning: "with, together", examples: ["sympathy", "symphony"], notes: "Harmonious union." },
+            { id: "p65", term: "trans-", type: "prefix", meaning: "across, beyond, over", examples: ["transact", "transport"], notes: "Across boundaries." },
+            { id: "p66", term: "ultra-", type: "prefix", meaning: "beyond, excessively", examples: ["ultramodern", "ultrasonic", "ultraviolet"], notes: "Extreme extent." },
+            { id: "p67", term: "un-", type: "prefix", meaning: "not, reverse of", examples: ["unhappy", "unlock", "uncomfortable"], notes: "Negation or reversal." },
+            { id: "p68", term: "under-", type: "prefix", meaning: "under, below", examples: ["underestimate"], notes: "Lower than required." },
+            { id: "p69", term: "uni-", type: "prefix", meaning: "one", examples: ["uniform", "unity"], notes: "Single or unified." },
+            { id: "p70", term: "vis-", type: "prefix", meaning: "to see", examples: ["visage", "visible"], notes: "Relates to vision." },
+
+            // TestPrepReview Suffixes
+            { id: "s1", term: "-able", type: "suffix", meaning: "capable of", examples: ["manageable", "washable"], notes: "Forms adjectives." },
+            { id: "s2", term: "-al", type: "suffix", meaning: "relating to", examples: ["natural", "musical"], notes: "Adjective ending." },
+            { id: "s3", term: "-ance", type: "suffix", meaning: "state, quality", examples: ["importance", "resistance"], notes: "Noun suffix." },
+            { id: "s4", term: "-ant", type: "suffix", meaning: "one who", examples: ["assistant", "applicant"], notes: "Refers to a person doing an action." },
+            { id: "s5", term: "-ary", type: "suffix", meaning: "relating to, place for", examples: ["dictionary", "honorary"], notes: "Noun or adjective." },
+            { id: "s6", term: "-ate", type: "suffix", meaning: "to make or do", examples: ["activate", "separate"], notes: "Verb suffix." },
+            { id: "s7", term: "-dom", type: "suffix", meaning: "state, condition", examples: ["freedom", "wisdom"], notes: "Abstract noun suffix." },
+            { id: "s8", term: "-en", type: "suffix", meaning: "to make", examples: ["harden", "brighten"], notes: "Verb suffix." },
+            { id: "s9", term: "-ence", type: "suffix", meaning: "state, quality", examples: ["patience", "independence"], notes: "Noun suffix." },
+            { id: "s10", term: "-er", type: "suffix", meaning: "one who", examples: ["teacher", "writer"], notes: "Person performing an action." },
+            { id: "s11", term: "-ful", type: "suffix", meaning: "full of", examples: ["joyful", "careful"], notes: "Adjective suffix." },
+            { id: "s12", term: "-ic", type: "suffix", meaning: "relating to", examples: ["historic", "poetic"], notes: "Pertaining to a concept." },
+            { id: "s13", term: "-ify", type: "suffix", meaning: "to make", examples: ["simplify", "beautify"], notes: "Verb creator." },
+            { id: "s14", term: "-ing", type: "suffix", meaning: "action or process", examples: ["running", "thinking"], notes: "Continuous action." },
+            { id: "s15", term: "-ish", type: "suffix", meaning: "relating to, somewhat", examples: ["foolish", "greenish"], notes: "Slight quality." },
+            { id: "s16", term: "-ism", type: "suffix", meaning: "belief or practice", examples: ["capitalism", "realism"], notes: "Ideology or system." },
+            { id: "s17", term: "-ist", type: "suffix", meaning: "one who", examples: ["artist", "biologist"], notes: "Specialist or practitioner." },
+            { id: "s18", term: "-ity", type: "suffix", meaning: "state, quality", examples: ["activity", "purity"], notes: "Abstract quality." },
+            { id: "s19", term: "-ive", type: "suffix", meaning: "having the nature of", examples: ["creative", "passive"], notes: "Inclined to a behavior." },
+            { id: "s20", term: "-less", type: "suffix", meaning: "without", examples: ["hopeless", "fearless"], notes: "Lacking something." },
+            { id: "s21", term: "-ly", type: "suffix", meaning: "in the manner of", examples: ["quickly", "kindly"], notes: "Adverb marker." },
+            { id: "s22", term: "-ment", type: "suffix", meaning: "action or result", examples: ["enjoyment", "development"], notes: "Noun marker." },
+            { id: "s23", term: "-ness", type: "suffix", meaning: "state, quality", examples: ["kindness", "darkness"], notes: "Condition of being." },
+            { id: "s24", term: "-ology", type: "suffix", meaning: "study of", examples: ["biology", "geology"], notes: "Academic domain." },
+            { id: "s25", term: "-ous", type: "suffix", meaning: "full of", examples: ["dangerous", "curious"], notes: "Possessing qualities." },
+            { id: "s26", term: "-ship", type: "suffix", meaning: "state, condition", examples: ["friendship", "leadership"], notes: "Status or relationship." },
+            { id: "s27", term: "-some", type: "suffix", meaning: "characterized by", examples: ["troublesome", "awesome"], notes: "Tending to cause." },
+            { id: "s28", term: "-tion", type: "suffix", meaning: "act or process", examples: ["celebration", "rotation"], notes: "Action or state." },
+            { id: "s29", term: "-tude", type: "suffix", meaning: "state or condition", examples: ["gratitude", "magnitude"], notes: "Quality measurement." },
+            { id: "s30", term: "-y", type: "suffix", meaning: "characterized by", examples: ["sunny", "snowy"], notes: "Full of or like." }
+        ];
+
+        /* CLASSROOM & EXTENDED SINGLE WORD MORPHOLOGY PRACTICE DATA */
+        const SINGLE_WORD_ITEMS = [
+            {
+                word: "Cats",
+                base: "Cat",
+                bound: "s",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Inflectional suffix '-s' adds plural information without altering category (Noun -> Noun) or core meaning."
+            },
+            {
+                word: "Quickly",
+                base: "Quick",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' transforms the Adjective 'quick' into the Adverb 'quickly'."
+            },
+            {
+                word: "Walked",
+                base: "Walk",
+                bound: "ed",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ed' marks past tense without changing the Verb class or core meaning."
+            },
+            {
+                word: "Happier",
+                base: "Happy",
+                bound: "er",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-er' expresses comparative degree without changing the Adjective class."
+            },
+            {
+                word: "Actionable",
+                base: "Action",
+                bound: "able",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-able' converts the Noun 'action' into the Adjective 'actionable'."
+            },
+            {
+                word: "Unhappy",
+                base: "Happy",
+                bound: "un",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'un-' changes the meaning to its negative opposite while keeping the Adjective class."
+            },
+            {
+                word: "Quickness",
+                base: "Quick",
+                bound: "ness",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ness' converts the Adjective 'quick' into the Noun 'quickness'."
+            },
+            {
+                word: "Teacher",
+                base: "Teach",
+                bound: "er",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-er' transforms the Verb 'teach' into the Noun 'teacher' (agent noun)."
+            },
+            {
+                word: "Darkness",
+                base: "Dark",
+                bound: "ness",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ness' creates an abstract Noun from the Adjective 'dark'."
+            },
+            {
+                word: "Simplify",
+                base: "Simple",
+                bound: "ify",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-ify' converts the Adjective 'simple' into the Verb 'simplify'."
+            },
+            {
+                word: "Activate",
+                base: "Active",
+                bound: "ate",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-ate' converts the Adjective 'active' into the Verb 'activate'."
+            },
+            {
+                word: "Rewrite",
+                base: "Write",
+                bound: "re",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 're-' changes the meaning to 'write again' while preserving the Verb class."
+            },
+            {
+                word: "Disappear",
+                base: "Appear",
+                bound: "dis",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'dis-' negates the meaning of the Verb 'appear' (to vanish)."
+            },
+            {
+                word: "Careful",
+                base: "Care",
+                bound: "ful",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ful' converts the Noun 'care' into the Adjective 'careful'."
+            },
+            {
+                word: "Carelessly",
+                base: "Careless",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' converts the Adjective 'careless' into the Adverb 'carelessly'."
+            },
+            {
+                word: "Hardened",
+                base: "Harden",
+                bound: "ed",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ed' indicates past tense without changing the Verb class."
+            },
+            {
+                word: "Singers",
+                base: "Singer",
+                bound: "s",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Inflectional suffix '-s' indicates plurality without altering the Noun category."
+            },
+            {
+                word: "Tallest",
+                base: "Tall",
+                bound: "est",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-est' marks the superlative degree of the Adjective 'tall'."
+            },
+            {
+                word: "Politely",
+                base: "Polite",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' changes the Adjective 'polite' into the Adverb 'politely'."
+            },
+            {
+                word: "Friendship",
+                base: "Friend",
+                bound: "ship",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ship' changes the concrete Noun 'friend' into the abstract Noun 'friendship'."
+            },
+            {
+                word: "Impossible",
+                base: "Possible",
+                bound: "im",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'im-' negates the Adjective 'possible' to 'not possible'."
+            },
+            {
+                word: "Demotivated",
+                base: "Motivated",
+                bound: "de",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'de-' reverses the state of 'motivated' to give the opposite meaning."
+            },
+            {
+                word: "Patience",
+                base: "Patient",
+                bound: "ence",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ence' converts the Adjective 'patient' into the Noun 'patience'."
+            },
+            {
+                word: "Creator",
+                base: "Create",
+                bound: "or",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-or' converts the Verb 'create' into the agent Noun 'creator'."
+            },
+            {
+                word: "Shorten",
+                base: "Short",
+                bound: "en",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-en' converts the Adjective 'short' into the Verb 'shorten'."
+            },
+            {
+                word: "Softly",
+                base: "Soft",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' converts the Adjective 'soft' into the Adverb 'softly'."
+            },
+            {
+                word: "Prehistoric",
+                base: "Historic",
+                bound: "pre",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'pre-' adds temporal meaning ('before history') to the Adjective 'historic'."
+            },
+            {
+                word: "Overestimate",
+                base: "Estimate",
+                bound: "over",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'over-' modifies the Verb 'estimate' to mean 'estimate excessively'."
+            },
+            {
+                word: "Running",
+                base: "Run",
+                bound: "ing",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ing' marks continuous aspect without changing the Verb class."
+            },
+            {
+                word: "Kingdom",
+                base: "King",
+                bound: "dom",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-dom' creates the abstract/domain Noun 'kingdom' from 'king'."
+            },
+            {
+                word: "Uncomfortable",
+                base: "Comfortable",
+                bound: "un",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'un-' alters meaning to negative while maintaining the Adjective class."
+            },
+            {
+                word: "Bravely",
+                base: "Brave",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' transforms the Adjective 'brave' into the Adverb 'bravely'."
+            },
+            {
+                word: "Dogs",
+                base: "Dog",
+                bound: "s",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Inflectional suffix '-s' indicates plurality without altering the Noun class."
+            },
+            {
+                word: "Stronger",
+                base: "Strong",
+                bound: "er",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-er' marks comparative degree without changing the Adjective category."
+            },
+            {
+                word: "Brighten",
+                base: "Bright",
+                bound: "en",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-en' converts the Adjective 'bright' into the Verb 'brighten'."
+            },
+            {
+                word: "Capitalism",
+                base: "Capital",
+                bound: "ism",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ism' creates the ideological Noun 'capitalism' from 'capital'."
+            },
+            {
+                word: "Biologist",
+                base: "Biology",
+                bound: "ist",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ist' turns the subject Noun 'biology' into the practitioner Noun 'biologist'."
+            },
+            {
+                word: "Hopeless",
+                base: "Hope",
+                bound: "less",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-less' converts the Noun 'hope' into the Adjective 'hopeless'."
+            },
+            {
+                word: "Misspell",
+                base: "Spell",
+                bound: "mis",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'mis-' alters the meaning of the Verb 'spell' to 'spell wrongly'."
+            },
+            {
+                word: "Freedom",
+                base: "Free",
+                bound: "dom",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-dom' converts the Adjective 'free' into the abstract Noun 'freedom'."
+            },
+            {
+                word: "Fastest",
+                base: "Fast",
+                bound: "est",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-est' marks superlative degree of the Adjective 'fast'."
+            },
+            {
+                word: "Antisocial",
+                base: "Social",
+                bound: "anti",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'anti-' changes the meaning to 'opposing social interaction' while preserving Adjective class."
+            },
+            {
+                word: "Playful",
+                base: "Play",
+                bound: "ful",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ful' converts the Verb 'play' into the Adjective 'playful'."
+            },
+            {
+                word: "Beautifully",
+                base: "Beautiful",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' converts the Adjective 'beautiful' into the Adverb 'beautifully'."
+            },
+            {
+                word: "Purity",
+                base: "Pure",
+                bound: "ity",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ity' converts the Adjective 'pure' into the abstract Noun 'purity'."
+            },
+            {
+                word: "Creative",
+                base: "Create",
+                bound: "ive",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ive' converts the Verb 'create' into the Adjective 'creative'."
+            },
+            {
+                word: "Disagreed",
+                base: "Disagree",
+                bound: "ed",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ed' provides past tense information without changing the Verb category."
+            },
+            {
+                word: "Joyful",
+                base: "Joy",
+                bound: "ful",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ful' converts the Noun 'joy' into the Adjective 'joyful'."
+            },
+            {
+                word: "Superhuman",
+                base: "Human",
+                bound: "super",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'super-' modifies meaning to 'exceeding normal human' while remaining an Adjective."
+            },
+            {
+                word: "Dances",
+                base: "Dance",
+                bound: "s",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-s' marks 3rd person singular present tense without altering Verb class."
+            },
+            {
+                word: "Dangerous",
+                base: "Danger",
+                bound: "ous",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ous' converts the Noun 'danger' into the Adjective 'dangerous'."
+            },
+            {
+                word: "Troublesome",
+                base: "Trouble",
+                bound: "some",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-some' converts the Noun 'trouble' into the Adjective 'troublesome'."
+            },
+            {
+                word: "Development",
+                base: "Develop",
+                bound: "ment",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ment' converts the Verb 'develop' into the Noun 'development'."
+            },
+            {
+                word: "Foolish",
+                base: "Fool",
+                bound: "ish",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ish' converts the Noun 'fool' into the Adjective 'foolish'."
+            },
+            {
+                word: "Harder",
+                base: "Hard",
+                bound: "er",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-er' denotes comparative degree without altering Adjective category."
+            },
+            {
+                word: "Weakness",
+                base: "Weak",
+                bound: "ness",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ness' converts the Adjective 'weak' into the abstract Noun 'weakness'."
+            },
+            {
+                word: "Slowly",
+                base: "Slow",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' transforms the Adjective 'slow' into the Adverb 'slowly'."
+            },
+            {
+                word: "Played",
+                base: "Play",
+                bound: "ed",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ed' marks past tense without changing the Verb category."
+            },
+            {
+                word: "Smarter",
+                base: "Smart",
+                bound: "er",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-er' indicates comparative degree while remaining an Adjective."
+            },
+            {
+                word: "Readable",
+                base: "Read",
+                bound: "able",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-able' converts the Verb 'read' into the Adjective 'readable'."
+            },
+            {
+                word: "Dislike",
+                base: "Like",
+                bound: "dis",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'dis-' negates the Verb 'like' to 'not like'."
+            },
+            {
+                word: "Leader",
+                base: "Lead",
+                bound: "er",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-er' converts the Verb 'lead' into the agent Noun 'leader'."
+            },
+            {
+                word: "Incapable",
+                base: "Capable",
+                bound: "in",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'in-' changes meaning to 'not capable' while preserving Adjective class."
+            },
+            {
+                word: "Singing",
+                base: "Sing",
+                bound: "ing",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Inflectional suffix '-ing' marks continuous progressive aspect without altering Verb class."
+            },
+            {
+                word: "Coldest",
+                base: "Cold",
+                bound: "est",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-est' marks superlative degree of the Adjective 'cold'."
+            },
+            {
+                word: "Movement",
+                base: "Move",
+                bound: "ment",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ment' converts the Verb 'move' into the Noun 'movement'."
+            },
+            {
+                word: "National",
+                base: "Nation",
+                bound: "al",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-al' converts the Noun 'nation' into the Adjective 'national'."
+            },
+            {
+                word: "Equalize",
+                base: "Equal",
+                bound: "ize",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-ize' converts the Adjective 'equal' into the Verb 'equalize'."
+            },
+            {
+                word: "Darken",
+                base: "Dark",
+                bound: "en",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-en' converts the Adjective 'dark' into the Verb 'darken'."
+            },
+            {
+                word: "Misunderstand",
+                base: "Understand",
+                bound: "mis",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'mis-' alters meaning to 'understand wrongly' while keeping Verb class."
+            },
+            {
+                word: "Useful",
+                base: "Use",
+                bound: "ful",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Adjective",
+                reasoning: "Derivational suffix '-ful' transforms the Noun 'use' into the Adjective 'useful'."
+            },
+            {
+                word: "Prepay",
+                base: "Pay",
+                bound: "pre",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'pre-' adds temporal meaning ('pay before') to the Verb 'pay'."
+            },
+            {
+                word: "Happiness",
+                base: "Happy",
+                bound: "ness",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ness' transforms the Adjective 'happy' into the abstract Noun 'happiness'."
+            },
+            {
+                word: "Quickest",
+                base: "Quick",
+                bound: "est",
+                position: "Suffix",
+                type: "Inflectional",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Inflectional suffix '-est' marks superlative degree without changing the Adjective class."
+            },
+            {
+                word: "Baker",
+                base: "Bake",
+                bound: "er",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-er' converts the Verb 'bake' into the agent Noun 'baker'."
+            },
+            {
+                word: "Glorify",
+                base: "Glory",
+                bound: "ify",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Verb",
+                reasoning: "Derivational suffix '-ify' converts the Noun 'glory' into the Verb 'glorify'."
+            },
+            {
+                word: "Ultrasonic",
+                base: "Sonic",
+                bound: "ultra",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adjective",
+                reasoning: "Derivational prefix 'ultra-' modifies meaning to 'beyond sound' while remaining an Adjective."
+            },
+            {
+                word: "Rebuild",
+                base: "Build",
+                bound: "re",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 're-' adds repetition meaning ('build again') to the Verb 'build'."
+            },
+            {
+                word: "Overcook",
+                base: "Cook",
+                bound: "over",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Verb",
+                finalClass: "Verb",
+                reasoning: "Derivational prefix 'over-' modifies the Verb 'cook' to mean 'cook excessively'."
+            },
+            {
+                word: "Cheerfully",
+                base: "Cheerful",
+                bound: "ly",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Adverb",
+                reasoning: "Derivational suffix '-ly' converts the Adjective 'cheerful' into the Adverb 'cheerfully'."
+            },
+            {
+                word: "Hardship",
+                base: "Hard",
+                bound: "ship",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-ship' converts the Adjective 'hard' into the abstract Noun 'hardship'."
+            },
+            {
+                word: "Submarine",
+                base: "Marine",
+                bound: "sub",
+                position: "Prefix",
+                type: "Derivational",
+                origClass: "Adjective",
+                finalClass: "Noun",
+                reasoning: "Derivational prefix 'sub-' combines with 'marine' to derive the entity Noun 'submarine'."
+            },
+            {
+                word: "Brotherhood",
+                base: "Brother",
+                bound: "hood",
+                position: "Suffix",
+                type: "Derivational",
+                origClass: "Noun",
+                finalClass: "Noun",
+                reasoning: "Derivational suffix '-hood' turns the concrete Noun 'brother' into the abstract Noun 'brotherhood'."
+            }
+        ];
+
+        /* CLASSROOM & EXTENDED SENTENCE MORPHOLOGY PRACTICE DATA */
+        const SENTENCE_ITEMS = [
+            {
+                id: "sent1",
+                sentence: "She likes to run quickly.",
+                targetWord: "quickly",
+                boundMorpheme: "ly",
+                freeMorpheme: "quick",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because the bound morpheme changes the adjective 'quick' into the adverb 'quickly' in order to describe the manner in which the verb is performed.",
+                    "It's inflectional because it only marks plural form of the verb.",
+                    "It's derivational because it changes the word class from noun to verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent2",
+                sentence: "The unhappy child cried.",
+                targetWord: "unhappy",
+                boundMorpheme: "un",
+                freeMorpheme: "happy",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because it changes the meaning of the word giving a negative connotation, even though word class remains Adjective.",
+                    "It's inflectional because prefixes never alter meaning in English sentences.",
+                    "It's derivational because it changes the adjective 'happy' into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent3",
+                sentence: "The teacher walked into the room.",
+                targetWord: "walked",
+                boundMorpheme: "ed",
+                freeMorpheme: "walk",
+                type: "Inflectional",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's inflectional because '-ed' provides past tense grammatical information without changing the core meaning or the Verb category.",
+                    "It's derivational because it changes a noun into a verb.",
+                    "It's derivational because it alters the state of the adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent4",
+                sentence: "That idea is completely actionable.",
+                targetWord: "actionable",
+                boundMorpheme: "able",
+                freeMorpheme: "action",
+                type: "Derivational",
+                classShift: "Noun -> Adjective",
+                reasoningOptions: [
+                    "It's derivational because the bound morpheme '-able' transforms the Noun 'action' into the Adjective 'actionable'.",
+                    "It's inflectional because it only adds comparative degree to the adjective.",
+                    "It's derivational because it turns an adverb into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent5",
+                sentence: "The famous singer gave a brilliant performance.",
+                targetWord: "singer",
+                boundMorpheme: "er",
+                freeMorpheme: "sing",
+                type: "Derivational",
+                classShift: "Verb -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-er' converts the verb 'sing' into the agent noun 'singer'.",
+                    "It's inflectional because it only indicates comparative degree.",
+                    "It's derivational because it turns an adjective into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent6",
+                sentence: "She spoke politely during the interview.",
+                targetWord: "politely",
+                boundMorpheme: "ly",
+                freeMorpheme: "polite",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because '-ly' converts the adjective 'polite' into the adverb 'politely' to modify how she spoke.",
+                    "It's inflectional because it only refines tense.",
+                    "It's derivational because it changes a verb into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent7",
+                sentence: "The team completed the hard task easily.",
+                targetWord: "completed",
+                boundMorpheme: "ed",
+                freeMorpheme: "complete",
+                type: "Inflectional",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's inflectional because '-ed' adds past tense grammatical aspect without altering the verb class or core meaning.",
+                    "It's derivational because it transforms an adjective into a noun.",
+                    "It's derivational because it negates the verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent8",
+                sentence: "Darkness covered the ancient city.",
+                targetWord: "darkness",
+                boundMorpheme: "ness",
+                freeMorpheme: "dark",
+                type: "Derivational",
+                classShift: "Adjective -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ness' turns the adjective 'dark' into the abstract noun 'darkness'.",
+                    "It's inflectional because it indicates plural state.",
+                    "It's derivational because it creates a new verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent9",
+                sentence: "Please rewrite the entire report before Friday.",
+                targetWord: "rewrite",
+                boundMorpheme: "re",
+                freeMorpheme: "write",
+                type: "Derivational",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's derivational because the prefix 're-' modifies the meaning of 'write' to 'write again' while keeping the Verb category.",
+                    "It's inflectional because prefixes only indicate plural form.",
+                    "It's derivational because it changes a verb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent10",
+                sentence: "He felt demotivated after losing the match.",
+                targetWord: "demotivated",
+                boundMorpheme: "de",
+                freeMorpheme: "motivated",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'de-' reverses the meaning to its negative opposite without changing the Adjective class.",
+                    "It's inflectional because it adds tense to the noun.",
+                    "It's derivational because it converts an adverb into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent11",
+                sentence: "The scientist tried to simplify the complex formula.",
+                targetWord: "simplify",
+                boundMorpheme: "ify",
+                freeMorpheme: "simple",
+                type: "Derivational",
+                classShift: "Adjective -> Verb",
+                reasoningOptions: [
+                    "It's derivational because '-ify' turns the adjective 'simple' into the verb 'simplify'.",
+                    "It's inflectional because it only marks plural form.",
+                    "It's derivational because it changes a noun into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent12",
+                sentence: "She was the tallest player on the basketball team.",
+                targetWord: "tallest",
+                boundMorpheme: "est",
+                freeMorpheme: "tall",
+                type: "Inflectional",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's inflectional because '-est' adds superlative degree information without changing the Adjective class.",
+                    "It's derivational because it turns an adjective into a noun.",
+                    "It's derivational because it changes the word class to verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent13",
+                sentence: "His sudden disappearance surprised everyone.",
+                targetWord: "disappearance",
+                boundMorpheme: "dis",
+                freeMorpheme: "appearance",
+                type: "Derivational",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'dis-' negates the meaning of 'appearance' while remaining in the Noun category.",
+                    "It's inflectional because prefixes indicate tense.",
+                    "It's derivational because it changes a noun into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent14",
+                sentence: "They established a strong friendship during college.",
+                targetWord: "friendship",
+                boundMorpheme: "ship",
+                freeMorpheme: "friend",
+                type: "Derivational",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's derivational because '-ship' transforms the concrete noun 'friend' into the abstract state noun 'friendship'.",
+                    "It's inflectional because it marks plural agreement.",
+                    "It's derivational because it turns an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent15",
+                sentence: "The manager will activate your new account today.",
+                targetWord: "activate",
+                boundMorpheme: "ate",
+                freeMorpheme: "active",
+                type: "Derivational",
+                classShift: "Adjective -> Verb",
+                reasoningOptions: [
+                    "It's derivational because '-ate' converts the adjective 'active' into the verb 'activate'.",
+                    "It's inflectional because it provides past tense.",
+                    "It's derivational because it turns a verb into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent16",
+                sentence: "The student listened carefully during class.",
+                targetWord: "carefully",
+                boundMorpheme: "ly",
+                freeMorpheme: "careful",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because suffix '-ly' converts the adjective 'careful' into the adverb 'carefully' to modify the verb 'listened'.",
+                    "It's inflectional because it adds tense to the verb.",
+                    "It's derivational because it turns a noun into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent17",
+                sentence: "Her act of kindness warmed everyone's heart.",
+                targetWord: "kindness",
+                boundMorpheme: "ness",
+                freeMorpheme: "kind",
+                type: "Derivational",
+                classShift: "Adjective -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ness' converts the adjective 'kind' into the abstract noun 'kindness'.",
+                    "It's inflectional because it only marks plural agreement.",
+                    "It's derivational because it turns a verb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent18",
+                sentence: "They are playing in the park.",
+                targetWord: "playing",
+                boundMorpheme: "ing",
+                freeMorpheme: "play",
+                type: "Inflectional",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's inflectional because '-ing' indicates continuous progressive aspect without changing the Verb category or core meaning.",
+                    "It's derivational because it turns a verb into a noun.",
+                    "It's derivational because it changes the adjective to an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent19",
+                sentence: "The puppy seemed very playful today.",
+                targetWord: "playful",
+                boundMorpheme: "ful",
+                freeMorpheme: "play",
+                type: "Derivational",
+                classShift: "Verb -> Adjective",
+                reasoningOptions: [
+                    "It's derivational because '-ful' converts the verb 'play' into the adjective 'playful'.",
+                    "It's inflectional because it indicates comparative degree.",
+                    "It's derivational because it changes a noun into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent20",
+                sentence: "He felt uncomfortable in the crowded room.",
+                targetWord: "uncomfortable",
+                boundMorpheme: "un",
+                freeMorpheme: "comfortable",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'un-' changes the core meaning to 'not comfortable' while keeping the Adjective class.",
+                    "It's inflectional because prefixes only indicate tense in English.",
+                    "It's derivational because it turns an adjective into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent21",
+                sentence: "She sang beautifully at the concert.",
+                targetWord: "beautifully",
+                boundMorpheme: "ly",
+                freeMorpheme: "beautiful",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because '-ly' converts the adjective 'beautiful' into the adverb 'beautifully'.",
+                    "It's inflectional because it adds tense to the singing action.",
+                    "It's derivational because it turns a verb into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent22",
+                sentence: "The sun is brighter today than yesterday.",
+                targetWord: "brighter",
+                boundMorpheme: "er",
+                freeMorpheme: "bright",
+                type: "Inflectional",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's inflectional because '-er' adds comparative degree information without changing the Adjective class.",
+                    "It's derivational because it transforms an adjective into a verb.",
+                    "It's derivational because it turns a noun into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent23",
+                sentence: "We need to brighten up this dark room.",
+                targetWord: "brighten",
+                boundMorpheme: "en",
+                freeMorpheme: "bright",
+                type: "Derivational",
+                classShift: "Adjective -> Verb",
+                reasoningOptions: [
+                    "It's derivational because '-en' transforms the adjective 'bright' into the verb 'brighten'.",
+                    "It's inflectional because it only marks plural agreement.",
+                    "It's derivational because it changes a verb into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent24",
+                sentence: "He made a foolish decision yesterday.",
+                targetWord: "foolish",
+                boundMorpheme: "ish",
+                freeMorpheme: "fool",
+                type: "Derivational",
+                classShift: "Noun -> Adjective",
+                reasoningOptions: [
+                    "It's derivational because '-ish' converts the noun 'fool' into the adjective 'foolish'.",
+                    "It's inflectional because it only refines tense.",
+                    "It's derivational because it turns an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent25",
+                sentence: "The birds flew high above the trees.",
+                targetWord: "birds",
+                boundMorpheme: "s",
+                freeMorpheme: "bird",
+                type: "Inflectional",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's inflectional because '-s' adds plural grammatical information without changing the Noun class.",
+                    "It's derivational because it changes a noun into a verb.",
+                    "It's derivational because it alters core word meaning."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent26",
+                sentence: "They misunderstood the instructions completely.",
+                targetWord: "misunderstood",
+                boundMorpheme: "mis",
+                freeMorpheme: "understood",
+                type: "Derivational",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'mis-' changes the core meaning to 'understood wrongly' while remaining a Verb.",
+                    "It's inflectional because prefixes alter tense.",
+                    "It's derivational because it changes a verb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent27",
+                sentence: "This mountain path is completely impassable during winter.",
+                targetWord: "impassable",
+                boundMorpheme: "im",
+                freeMorpheme: "passable",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'im-' negates the adjective 'passable' to mean 'not passable'.",
+                    "It's inflectional because it adds superlative comparison.",
+                    "It's derivational because it converts an adjective into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent28",
+                sentence: "Her creative work impressed the judges.",
+                targetWord: "creative",
+                boundMorpheme: "ive",
+                freeMorpheme: "create",
+                type: "Derivational",
+                classShift: "Verb -> Adjective",
+                reasoningOptions: [
+                    "It's derivational because '-ive' transforms the verb 'create' into the adjective 'creative'.",
+                    "It's inflectional because it marks past tense.",
+                    "It's derivational because it changes a noun into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent29",
+                sentence: "The economic development boosted the town.",
+                targetWord: "development",
+                boundMorpheme: "ment",
+                freeMorpheme: "develop",
+                type: "Derivational",
+                classShift: "Verb -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ment' converts the verb 'develop' into the abstract noun 'development'.",
+                    "It's inflectional because it indicates continuous aspect.",
+                    "It's derivational because it turns an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent30",
+                sentence: "The runner was faster than his opponent.",
+                targetWord: "faster",
+                boundMorpheme: "er",
+                freeMorpheme: "fast",
+                type: "Inflectional",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's inflectional because '-er' adds comparative degree without changing the Adjective class.",
+                    "It's derivational because it creates a new noun.",
+                    "It's derivational because it changes an adverb to a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent31",
+                sentence: "The artist painted a beautiful picture.",
+                targetWord: "artist",
+                boundMorpheme: "ist",
+                freeMorpheme: "art",
+                type: "Derivational",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's derivational because '-ist' converts the domain noun 'art' into the practitioner noun 'artist'.",
+                    "It's inflectional because it only marks plural agreement.",
+                    "It's derivational because it turns a verb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent32",
+                sentence: "They are rebuilding the broken bridge.",
+                targetWord: "rebuilding",
+                boundMorpheme: "re",
+                freeMorpheme: "building",
+                type: "Derivational",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's derivational because prefix 're-' adds repetition meaning ('build again') while maintaining the Verb category.",
+                    "It's inflectional because prefixes alter tense.",
+                    "It's derivational because it converts a verb into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent33",
+                sentence: "She answered the difficult question correctly.",
+                targetWord: "correctly",
+                boundMorpheme: "ly",
+                freeMorpheme: "correct",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because '-ly' converts the adjective 'correct' into the adverb 'correctly' describing how she answered.",
+                    "It's inflectional because it indicates plural state.",
+                    "It's derivational because it changes a noun into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent34",
+                sentence: "He showed great bravery during the rescue operation.",
+                targetWord: "bravery",
+                boundMorpheme: "ery",
+                freeMorpheme: "brave",
+                type: "Derivational",
+                classShift: "Adjective -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ery' converts the adjective 'brave' into the abstract noun 'bravery'.",
+                    "It's inflectional because it provides comparative aspect.",
+                    "It's derivational because it turns an adverb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent35",
+                sentence: "The lake became much colder in December.",
+                targetWord: "colder",
+                boundMorpheme: "er",
+                freeMorpheme: "cold",
+                type: "Inflectional",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's inflectional because '-er' adds comparative degree information without changing the Adjective class.",
+                    "It's derivational because it creates a new verb.",
+                    "It's derivational because it turns an adjective into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent36",
+                sentence: "The teacher explained the complex lesson clearly.",
+                targetWord: "clearly",
+                boundMorpheme: "ly",
+                freeMorpheme: "clear",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because '-ly' transforms the adjective 'clear' into the adverb 'clearly'.",
+                    "It's inflectional because it only marks past tense.",
+                    "It's derivational because it turns a verb into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent37",
+                sentence: "He was incapable of making such a mistake.",
+                targetWord: "incapable",
+                boundMorpheme: "in",
+                freeMorpheme: "capable",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'in-' changes meaning to 'not capable' while keeping the Adjective class.",
+                    "It's inflectional because prefixes alter grammatical tense.",
+                    "It's derivational because it changes an adjective into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent38",
+                sentence: "Her deep sadness was evident to everyone in the room.",
+                targetWord: "sadness",
+                boundMorpheme: "ness",
+                freeMorpheme: "sad",
+                type: "Derivational",
+                classShift: "Adjective -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ness' converts the adjective 'sad' into the abstract noun 'sadness'.",
+                    "It's inflectional because it marks plural number.",
+                    "It's derivational because it turns a noun into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent39",
+                sentence: "The students walked to school together.",
+                targetWord: "students",
+                boundMorpheme: "s",
+                freeMorpheme: "student",
+                type: "Inflectional",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's inflectional because '-s' adds plural number information without altering the Noun category.",
+                    "It's derivational because it changes a noun into a verb.",
+                    "It's derivational because it creates an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent40",
+                sentence: "They decided to modernize the old facility.",
+                targetWord: "modernize",
+                boundMorpheme: "ize",
+                freeMorpheme: "modern",
+                type: "Derivational",
+                classShift: "Adjective -> Verb",
+                reasoningOptions: [
+                    "It's derivational because '-ize' turns the adjective 'modern' into the verb 'modernize'.",
+                    "It's inflectional because it adds comparative degree.",
+                    "It's derivational because it turns a verb into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent41",
+                sentence: "The talented musician played a lovely song.",
+                targetWord: "musician",
+                boundMorpheme: "ian",
+                freeMorpheme: "music",
+                type: "Derivational",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's derivational because '-ian' turns the subject noun 'music' into the practitioner noun 'musician'.",
+                    "It's inflectional because it marks tense.",
+                    "It's derivational because it converts an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent42",
+                sentence: "The dish was overcooked and dry.",
+                targetWord: "overcooked",
+                boundMorpheme: "over",
+                freeMorpheme: "cooked",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'over-' modifies meaning to 'cooked excessively' while preserving the Adjective category.",
+                    "It's inflectional because prefixes specify continuous aspect.",
+                    "It's derivational because it turns an adjective into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent43",
+                sentence: "He works as a senior software programmer.",
+                targetWord: "programmer",
+                boundMorpheme: "er",
+                freeMorpheme: "program",
+                type: "Derivational",
+                classShift: "Verb -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-er' converts the verb 'program' into the agent noun 'programmer'.",
+                    "It's inflectional because it indicates comparative degree.",
+                    "It's derivational because it changes a noun into an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent44",
+                sentence: "The team celebrated their victory joyfully.",
+                targetWord: "joyfully",
+                boundMorpheme: "ly",
+                freeMorpheme: "joyful",
+                type: "Derivational",
+                classShift: "Adjective -> Adverb",
+                reasoningOptions: [
+                    "It's derivational because '-ly' converts the adjective 'joyful' into the adverb 'joyfully'.",
+                    "It's inflectional because it adds past tense information.",
+                    "It's derivational because it changes a verb into a noun."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent45",
+                sentence: "She showed remarkable endurance during the marathon.",
+                targetWord: "endurance",
+                boundMorpheme: "ance",
+                freeMorpheme: "endure",
+                type: "Derivational",
+                classShift: "Verb -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ance' converts the verb 'endure' into the abstract noun 'endurance'.",
+                    "It's inflectional because it marks plural number.",
+                    "It's derivational because it turns an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent46",
+                sentence: "The watchdog barked loudly at the mailman.",
+                targetWord: "barked",
+                boundMorpheme: "ed",
+                freeMorpheme: "bark",
+                type: "Inflectional",
+                classShift: "None (Verb -> Verb)",
+                reasoningOptions: [
+                    "It's inflectional because '-ed' provides past tense information without altering the Verb class.",
+                    "It's derivational because it transforms an adjective into a noun.",
+                    "It's derivational because it creates an adverb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent47",
+                sentence: "His comment was completely irrelevant to the discussion.",
+                targetWord: "irrelevant",
+                boundMorpheme: "ir",
+                freeMorpheme: "relevant",
+                type: "Derivational",
+                classShift: "None (Adjective -> Adjective)",
+                reasoningOptions: [
+                    "It's derivational because prefix 'ir-' negates the adjective 'relevant' to 'not relevant'.",
+                    "It's inflectional because prefixes express superlative degree.",
+                    "It's derivational because it turns an adjective into a verb."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent48",
+                sentence: "We appreciate your assistance with this project.",
+                targetWord: "assistance",
+                boundMorpheme: "ance",
+                freeMorpheme: "assist",
+                type: "Derivational",
+                classShift: "Verb -> Noun",
+                reasoningOptions: [
+                    "It's derivational because '-ance' converts the verb 'assist' into the abstract noun 'assistance'.",
+                    "It's inflectional because it marks continuous progressive tense.",
+                    "It's derivational because it turns a noun into an adjective."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent49",
+                sentence: "The red flowers smell sweet in the garden.",
+                targetWord: "flowers",
+                boundMorpheme: "s",
+                freeMorpheme: "flower",
+                type: "Inflectional",
+                classShift: "None (Noun -> Noun)",
+                reasoningOptions: [
+                    "It's inflectional because '-s' marks plural number without changing the Noun class.",
+                    "It's derivational because it changes a noun into a verb.",
+                    "It's derivational because it alters core meaning."
+                ],
+                correctReasoningIndex: 0
+            },
+            {
+                id: "sent50",
+                sentence: "They decided to shorten the long presentation.",
+                targetWord: "shorten",
+                boundMorpheme: "en",
+                freeMorpheme: "short",
+                type: "Derivational",
+                classShift: "Adjective -> Verb",
+                reasoningOptions: [
+                    "It's derivational because '-en' transforms the adjective 'short' into the verb 'shorten'.",
+                    "It's inflectional because it only marks plural agreement.",
+                    "It's derivational because it turns a verb into an adverb."
+                ],
+                correctReasoningIndex: 0
+            }
+        ];
+
+        /* GLOBAL APP STATE */
+        let state = {
+            currentTab: 'library',
+            soundEnabled: true,
+            masteredIds: JSON.parse(localStorage.getItem('mm_mastered') || '[]'),
+            stats: JSON.parse(localStorage.getItem('mm_stats') || '{"reviews": 0, "quizzes": 0, "correct": 0, "totalQ": 0, "streak": 1, "sentencesAnalyzed": 0}'),
+            currentWlabIndex: 0,
+            currentSlabIndex: 0,
+            quizState: {
+                active: false,
+                mode: '',
+                questions: [],
+                currentIndex: 0,
+                score: 0
+            }
+        };
+
+        /* AUDIO SYNTHESIZER */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!state.soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function toggleAudio() {
+            state.soundEnabled = !state.soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            icon.className = state.soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+            playSound('click');
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const clean = text.replace(/[-]/g, '');
+            const msg = new SpeechSynthesisUtterance(clean);
+            msg.lang = 'en-US';
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
+
+        /* NAVIGATION CONTROL */
+        function switchTab(tabId) {
+            playSound('click');
+            state.currentTab = tabId;
+
+            ['library', 'word-lab', 'sentence-lab', 'quiz', 'theory', 'stats'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const nav = document.getElementById(`nav-${t}`);
+                const mnav = document.getElementById(`mnav-${t}`);
+
+                if (t === tabId) {
+                    sec.classList.remove('hidden');
+                    if(nav) nav.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-white bg-brand-600 shadow-sm flex items-center space-x-1.5";
+                    if(mnav) mnav.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-600 text-white whitespace-nowrap";
+                } else {
+                    sec.classList.add('hidden');
+                    if(nav) nav.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-700/50 flex items-center space-x-1.5";
+                    if(mnav) mnav.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 whitespace-nowrap";
+                }
+            });
+
+            if (tabId === 'word-lab') initWordLab();
+            if (tabId === 'sentence-lab') initSentenceLab();
+            if (tabId === 'stats') renderStats();
+        }
+
+        /* TAB 1: LIBRARY FUNCTIONS */
+        function renderLibrary(items = MORPHOLOGY_DATA) {
+            const grid = document.getElementById('library-grid');
+            const badge = document.getElementById('total-count-badge');
+            badge.innerText = `${items.length} entries`;
+
+            grid.innerHTML = items.map(item => {
+                const isMastered = state.masteredIds.includes(item.id);
+                const typeColor = item.type === 'prefix' ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+
+                return `
+                    <div class="bg-slate-800/80 border border-slate-700/80 hover:border-slate-600 p-5 rounded-2xl space-y-3 transition flex flex-col justify-between group">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${typeColor}">
+                                    ${item.type}
+                                </span>
+                                <button onclick="toggleMastery('${item.id}')" class="text-slate-500 hover:text-amber-400 transition text-sm" title="Toggle Mastered">
+                                    <i class="${isMastered ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star'}"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex items-baseline space-x-2">
+                                <h3 class="text-2xl font-extrabold text-white tracking-tight">${item.term}</h3>
+                                <button onclick="speakText('${item.term}')" class="text-slate-500 hover:text-brand-400 text-xs transition">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                            </div>
+
+                            <p class="text-sm font-semibold text-amber-300">${item.meaning}</p>
+                        </div>
+
+                        <div class="space-y-2 pt-2 border-t border-slate-700/50">
+                            <span class="text-[11px] font-semibold text-slate-400 block uppercase">Examples:</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${item.examples.map(ex => `
+                                    <span onclick="speakText('${ex}')" class="cursor-pointer bg-slate-900/90 hover:bg-slate-900 text-slate-300 text-xs px-2.5 py-1 rounded-lg border border-slate-700/80 transition flex items-center space-x-1">
+                                        <span>${ex}</span>
+                                        <i class="fa-solid fa-volume-low text-[9px] text-slate-500"></i>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterLibrary() {
+            const search = document.getElementById('library-search').value.toLowerCase().trim();
+            const type = document.getElementById('library-filter-type').value;
+
+            const filtered = MORPHOLOGY_DATA.filter(item => {
+                const matchesType = type === 'all' || item.type === type;
+                const matchesSearch = item.term.toLowerCase().includes(search) ||
+                                      item.meaning.toLowerCase().includes(search) ||
+                                      item.examples.some(ex => ex.toLowerCase().includes(search));
+                return matchesType && matchesSearch;
+            });
+
+            renderLibrary(filtered);
+        }
+
+        function toggleMastery(id) {
+            playSound('click');
+            if (state.masteredIds.includes(id)) {
+                state.masteredIds = state.masteredIds.filter(x => x !== id);
+            } else {
+                state.masteredIds.push(id);
+            }
+            localStorage.setItem('mm_mastered', JSON.stringify(state.masteredIds));
+            filterLibrary();
+        }
+
+        /* TAB 2: WORD MORPHOLOGICAL LAB */
+        function initWordLab() {
+            const selector = document.getElementById('word-lab-selector');
+            selector.innerHTML = SINGLE_WORD_ITEMS.map((item, idx) => `
+                <option value="${idx}">${item.word}</option>
+            `).join('');
+
+            loadWordLabItem(0);
+        }
+
+        function loadWordLabItem(index) {
+            state.currentWlabIndex = parseInt(index);
+            const item = SINGLE_WORD_ITEMS[state.currentWlabIndex];
+
+            document.getElementById('wlab-target-word').innerText = item.word;
+            
+            // Clear inputs
+            document.getElementById('wlab-input-base').value = '';
+            document.getElementById('wlab-input-bound').value = '';
+            document.getElementById('wlab-select-position').value = '';
+            document.getElementById('wlab-select-type').value = '';
+            document.getElementById('wlab-select-orig-class').value = '';
+            document.getElementById('wlab-select-final-class').value = '';
+
+            const fb = document.getElementById('wlab-feedback');
+            fb.classList.add('hidden');
+        }
+
+        function checkWordLabAnswer() {
+            const item = SINGLE_WORD_ITEMS[state.currentWlabIndex];
+            const uBase = document.getElementById('wlab-input-base').value.trim().toLowerCase();
+            const uBound = document.getElementById('wlab-input-bound').value.trim().toLowerCase().replace('-', '');
+            const uPos = document.getElementById('wlab-select-position').value;
+            const uType = document.getElementById('wlab-select-type').value;
+            const uOrig = document.getElementById('wlab-select-orig-class').value;
+            const uFinal = document.getElementById('wlab-select-final-class').value;
+
+            const isCorrect = (uBase === item.base.toLowerCase()) &&
+                              (uBound === item.bound.toLowerCase()) &&
+                              (uPos === item.position) &&
+                              (uType === item.type) &&
+                              (uOrig === item.origClass) &&
+                              (uFinal === item.finalClass);
+
+            const fb = document.getElementById('wlab-feedback');
+            fb.classList.remove('hidden');
+
+            if (isCorrect) {
+                playSound('correct');
+                fb.className = "p-5 rounded-2xl text-sm font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 space-y-2 block";
+                fb.innerHTML = `
+                    <div class="flex items-center space-x-2 text-emerald-400 font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Excellent Morphological Analysis!</span>
+                    </div>
+                    <p class="text-xs text-slate-300">${item.reasoning}</p>
+                `;
+            } else {
+                playSound('wrong');
+                fb.className = "p-5 rounded-2xl text-sm font-medium bg-rose-500/10 text-rose-300 border border-rose-500/30 space-y-2 block";
+                fb.innerHTML = `
+                    <div class="flex items-center space-x-2 text-rose-400 font-bold">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>Check your breakdown values.</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Target expected: Base=<b>${item.base}</b>, Bound=<b>${item.bound}</b> (${item.position}), Type=<b>${item.type}</b>, Shift=<b>${item.origClass} &rarr; ${item.finalClass}</b>.</p>
+                `;
+            }
+        }
+
+        function revealWordLabAnswer() {
+            playSound('click');
+            const item = SINGLE_WORD_ITEMS[state.currentWlabIndex];
+            
+            document.getElementById('wlab-input-base').value = item.base;
+            document.getElementById('wlab-input-bound').value = item.bound;
+            document.getElementById('wlab-select-position').value = item.position;
+            document.getElementById('wlab-select-type').value = item.type;
+            document.getElementById('wlab-select-orig-class').value = item.origClass;
+            document.getElementById('wlab-select-final-class').value = item.finalClass;
+
+            const fb = document.getElementById('wlab-feedback');
+            fb.classList.remove('hidden');
+            fb.className = "p-5 rounded-2xl text-sm font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 space-y-2 block";
+            fb.innerHTML = `
+                <div class="flex items-center space-x-2 text-indigo-400 font-bold">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Official Solution Breakdown</span>
+                </div>
+                <p class="text-xs text-slate-300">${item.reasoning}</p>
+            `;
+        }
+
+        /* TAB 3: SENTENCE LEVEL MORPHOLOGICAL LAB */
+        function initSentenceLab() {
+            const selector = document.getElementById('sentence-lab-selector');
+            selector.innerHTML = SENTENCE_ITEMS.map((item, idx) => `
+                <option value="${idx}">Sentence ${idx + 1}: ${item.targetWord}</option>
+            `).join('');
+
+            loadSentenceLabItem(0);
+        }
+
+        function loadSentenceLabItem(index) {
+            state.currentSlabIndex = parseInt(index);
+            const item = SENTENCE_ITEMS[state.currentSlabIndex];
+
+            // Render sentence with highlighted target word
+            const highlightedSentence = item.sentence.replace(
+                item.targetWord,
+                `<span class="text-amber-400 underline decoration-brand-500 decoration-2">${item.targetWord}</span>`
+            );
+            document.getElementById('slab-sentence-text').innerHTML = highlightedSentence;
+            document.getElementById('slab-target-highlight').innerHTML = `Target word under analysis: <span class="text-brand-300 font-bold">${item.targetWord}</span>`;
+
+            // Populate reasoning options
+            const rSelect = document.getElementById('slab-select-reasoning');
+            rSelect.innerHTML = `<option value="">-- Choose Reasoning --</option>` + 
+                item.reasoningOptions.map((opt, i) => `<option value="${i}">${opt}</option>`).join('');
+
+            // Clear inputs
+            document.getElementById('slab-input-bound').value = '';
+            document.getElementById('slab-input-free').value = '';
+            document.getElementById('slab-select-type').value = '';
+            document.getElementById('slab-select-class-shift').value = '';
+
+            const fb = document.getElementById('slab-feedback');
+            fb.classList.add('hidden');
+        }
+
+        function checkSentenceLabAnswer() {
+            const item = SENTENCE_ITEMS[state.currentSlabIndex];
+            const uBound = document.getElementById('slab-input-bound').value.trim().toLowerCase().replace('-', '');
+            const uFree = document.getElementById('slab-input-free').value.trim().toLowerCase();
+            const uType = document.getElementById('slab-select-type').value;
+            const uShift = document.getElementById('slab-select-class-shift').value;
+            const uReasonIdx = parseInt(document.getElementById('slab-select-reasoning').value);
+
+            const isCorrect = (uBound === item.boundMorpheme.toLowerCase()) &&
+                              (uFree === item.freeMorpheme.toLowerCase()) &&
+                              (uType === item.type) &&
+                              (uShift === item.classShift) &&
+                              (uReasonIdx === item.correctReasoningIndex);
+
+            const fb = document.getElementById('slab-feedback');
+            fb.classList.remove('hidden');
+
+            if (isCorrect) {
+                playSound('correct');
+                state.stats.sentencesAnalyzed++;
+                saveStats();
+
+                fb.className = "p-5 rounded-2xl text-sm font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 space-y-2 block";
+                fb.innerHTML = `
+                    <div class="flex items-center space-x-2 text-emerald-400 font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Correct Sentence Analysis!</span>
+                    </div>
+                    <p class="text-xs text-slate-300"><strong>Reasoning:</strong> ${item.reasoningOptions[item.correctReasoningIndex]}</p>
+                `;
+            } else {
+                playSound('wrong');
+                fb.className = "p-5 rounded-2xl text-sm font-medium bg-rose-500/10 text-rose-300 border border-rose-500/30 space-y-2 block";
+                fb.innerHTML = `
+                    <div class="flex items-center space-x-2 text-rose-400 font-bold">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>Analysis incomplete or incorrect.</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Review bound morpheme (<b>${item.boundMorpheme}</b>), free morpheme (<b>${item.freeMorpheme}</b>), type (<b>${item.type}</b>), and class shift (<b>${item.classShift}</b>).</p>
+                `;
+            }
+        }
+
+        function revealSentenceLabAnswer() {
+            playSound('click');
+            const item = SENTENCE_ITEMS[state.currentSlabIndex];
+
+            document.getElementById('slab-input-bound').value = item.boundMorpheme;
+            document.getElementById('slab-input-free').value = item.freeMorpheme;
+            document.getElementById('slab-select-type').value = item.type;
+            document.getElementById('slab-select-class-shift').value = item.classShift;
+            document.getElementById('slab-select-reasoning').value = item.correctReasoningIndex;
+
+            const fb = document.getElementById('slab-feedback');
+            fb.classList.remove('hidden');
+            fb.className = "p-5 rounded-2xl text-sm font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 space-y-2 block";
+            fb.innerHTML = `
+                <div class="flex items-center space-x-2 text-indigo-400 font-bold">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Official Solution</span>
+                </div>
+                <p class="text-xs text-slate-300"><strong>Reasoning:</strong> ${item.reasoningOptions[item.correctReasoningIndex]}</p>
+            `;
+        }
+
+        /* TAB 4: QUIZ HUB FUNCTIONS */
+        function startQuiz(mode) {
+            playSound('click');
+            state.quizState = {
+                active: true,
+                mode: mode,
+                questions: generateQuizQuestions(mode),
+                currentIndex: 0,
+                score: 0
+            };
+
+            document.getElementById('quiz-select-screen').classList.add('hidden');
+            document.getElementById('quiz-results-screen').classList.add('hidden');
+            document.getElementById('quiz-active-screen').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function generateQuizQuestions(mode) {
+            if (mode === 'sentence') {
+                return SENTENCE_ITEMS.map(s => ({
+                    questionText: `In the sentence "${s.sentence}", what type of morpheme is "${s.boundMorpheme}" in "${s.targetWord}"?`,
+                    correctAnswer: `${s.type} (${s.classShift})`,
+                    options: [
+                        `${s.type} (${s.classShift})`,
+                        s.type === 'Derivational' ? 'Inflectional (None)' : 'Derivational (Noun -> Adjective)',
+                        'Derivational (Verb -> Adverb)',
+                        'Inflectional (Noun -> Noun)'
+                    ].sort(() => Math.random() - 0.5)
+                }));
+            }
+
+            const shuffled = [...MORPHOLOGY_DATA].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, 10);
+
+            return selected.map(item => {
+                let questionText = "";
+                let correctAnswer = "";
+                let options = [];
+
+                if (mode === 'meaning') {
+                    questionText = `What is the meaning of the ${item.type} "${item.term}"?`;
+                    correctAnswer = item.meaning;
+
+                    const distractors = MORPHOLOGY_DATA
+                        .filter(x => x.meaning !== item.meaning)
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, 3)
+                        .map(x => x.meaning);
+
+                    options = [correctAnswer, ...distractors].sort(() => Math.random() - 0.5);
+                } else { // deconstruct / shift
+                    const ex = item.examples[0] || item.term;
+                    questionText = `Which affix is used in the word "${ex}"?`;
+                    correctAnswer = `${item.term} (${item.type})`;
+
+                    const distractors = MORPHOLOGY_DATA
+                        .filter(x => x.term !== item.term)
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, 3)
+                        .map(x => `${x.term} (${x.type})`);
+
+                    options = [correctAnswer, ...distractors].sort(() => Math.random() - 0.5);
+                }
+
+                return { questionText, correctAnswer, options };
+            });
+        }
+
+        function renderQuestion() {
+            const qState = state.quizState;
+            const q = qState.questions[qState.currentIndex];
+
+            document.getElementById('quiz-question-type').innerText = `QUESTION ${qState.currentIndex + 1} OF ${qState.questions.length}`;
+            document.getElementById('quiz-question-text').innerText = q.questionText;
+            document.getElementById('quiz-progress-bar').style.width = `${((qState.currentIndex + 1) / qState.questions.length) * 100}%`;
+            document.getElementById('quiz-score-badge').innerText = `Score: ${qState.score}/${qState.currentIndex}`;
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.add('hidden');
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = q.options.map(opt => `
+                <button onclick="handleAnswer('${opt.replace(/'/g, "\\'")}')" class="w-full text-left p-4 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-brand-500 hover:bg-slate-900/80 text-sm text-slate-200 font-medium transition flex items-center justify-between group">
+                    <span>${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-600 group-hover:text-brand-400"></i>
+                </button>
+            `).join('');
+        }
+
+        function handleAnswer(selectedOpt) {
+            const qState = state.quizState;
+            const q = qState.questions[qState.currentIndex];
+            const feedback = document.getElementById('quiz-feedback');
+            const isCorrect = selectedOpt === q.correctAnswer;
+
+            if (isCorrect) {
+                playSound('correct');
+                qState.score++;
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 block";
+                feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Correct!';
+            } else {
+                playSound('wrong');
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-500/10 text-rose-400 border border-rose-500/30 block";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Incorrect. Correct answer: <strong>${q.correctAnswer}</strong>`;
+            }
+
+            const btns = document.querySelectorAll('#quiz-options-container button');
+            btns.forEach(btn => btn.disabled = true);
+
+            setTimeout(() => {
+                qState.currentIndex++;
+                if (qState.currentIndex < qState.questions.length) {
+                    renderQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 1200);
+        }
+
+        function finishQuiz() {
+            const qState = state.quizState;
+            document.getElementById('quiz-active-screen').classList.add('hidden');
+            document.getElementById('quiz-results-screen').classList.remove('hidden');
+
+            document.getElementById('quiz-final-score').innerText = `${qState.score} / ${qState.questions.length}`;
+            const pct = Math.round((qState.score / qState.questions.length) * 100);
+            document.getElementById('quiz-accuracy-percentage').innerText = `${pct}% Accuracy`;
+
+            state.stats.quizzes++;
+            state.stats.correct += qState.score;
+            state.stats.totalQ += qState.questions.length;
+            saveStats();
+        }
+
+        function exitQuiz() {
+            playSound('click');
+            document.getElementById('quiz-active-screen').classList.add('hidden');
+            document.getElementById('quiz-results-screen').classList.add('hidden');
+            document.getElementById('quiz-select-screen').classList.remove('hidden');
+        }
+
+        /* TAB 6: STATS & ANALYTICS */
+        function renderStats() {
+            document.getElementById('stat-mastered').innerText = state.masteredIds.length;
+            document.getElementById('stat-streak').innerText = `${state.stats.streak} Days`;
+            document.getElementById('stat-sentences').innerText = state.stats.sentencesAnalyzed || 0;
+
+            const accuracy = state.stats.totalQ > 0 ? Math.round((state.stats.correct / state.stats.totalQ) * 100) : 0;
+            document.getElementById('stat-accuracy').innerText = `${accuracy}%`;
+
+            drawChart();
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('progress-canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const prefixes = MORPHOLOGY_DATA.filter(x => x.type === 'prefix');
+            const suffixes = MORPHOLOGY_DATA.filter(x => x.type === 'suffix');
+
+            const masteredPrefixes = prefixes.filter(x => state.masteredIds.includes(x.id)).length;
+            const masteredSuffixes = suffixes.filter(x => state.masteredIds.includes(x.id)).length;
+
+            const barWidth = 60;
+            const gap = 80;
+            const startX = (canvas.width - (barWidth * 4 + gap)) / 2;
+            const maxH = canvas.height - 60;
+
+            const data = [
+                { label: 'Prefix Total', val: prefixes.length, max: prefixes.length, color: '#4138ca' },
+                { label: 'Prefix Mastered', val: masteredPrefixes, max: prefixes.length, color: '#6366f1' },
+                { label: 'Suffix Total', val: suffixes.length, max: suffixes.length, color: '#047857' },
+                { label: 'Suffix Mastered', val: masteredSuffixes, max: suffixes.length, color: '#10b981' }
+            ];
+
+            data.forEach((item, i) => {
+                const x = startX + i * (barWidth + 15) + (i >= 2 ? 30 : 0);
+                const h = (item.val / item.max) * maxH || 5;
+                const y = canvas.height - 30 - h;
+
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barWidth, h, [6, 6, 0, 0]);
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.val, x + barWidth / 2, y - 8);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '10px Inter';
+                ctx.fillText(item.label.split(' ')[1], x + barWidth / 2, canvas.height - 10);
+            });
+        }
+
+        function saveStats() {
+            localStorage.setItem('mm_stats', JSON.stringify(state.stats));
+            document.getElementById('streak-counter').innerText = `${state.stats.streak} Day Streak`;
+        }
+
+        function resetProgress() {
+            state.masteredIds = [];
+            state.stats = { reviews: 0, quizzes: 0, correct: 0, totalQ: 0, streak: 1, sentencesAnalyzed: 0 };
+            localStorage.removeItem('mm_mastered');
+            localStorage.removeItem('mm_stats');
+            filterLibrary();
+            renderStats();
+        }
+
+        /* INITIALIZATION */
+        window.onload = function() {
+            filterLibrary();
+            saveStats();
+        }
+    </script>
+</body>
+</html>
