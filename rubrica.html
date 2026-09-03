@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvaluaTIC - Feedback Formativo (Unidad 1)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init({
+            publicKey: "xjz-L3LVVkaKYeBJO",
+          });
+       })();
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .rubric-radio:checked + label {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+            color: #4338ca;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        .rubric-radio:checked + label .status-icon {
+            color: #4f46e5;
+            opacity: 1;
+        }
+        .rubric-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .status-icon {
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-graduation-cap text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight">EvaluaTIC</span>
+                </div>
+                <div class="text-sm font-medium text-indigo-100 flex flex-col items-end">
+                    <span>I.E. Gran Colombia</span>
+                    <span class="text-xs opacity-75">Grado 9-E | Unidad 1: Dilemas</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-6">
+        
+        <div class="w-full md:w-2/3 flex flex-col gap-6">
+            
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-indigo-500"></i>Selección de Estudiante</h2>
+                
+                <div>
+                    <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Estudiante (Grado 9-E)</label>
+                    <select id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-gray-50">
+                        <option value="">Seleccione un estudiante...</option>
+                        <option value="Valentina Álvarez Quinayas">Valentina Álvarez Quinayas</option>
+                        <option value="Danna Katherine Cano Pradilla">Danna Katherine Cano Pradilla</option>
+                        <option value="Michell Andrea Donato Sánchez">Michell Andrea Donato Sánchez</option>
+                        <option value="Caroline Galvis Díaz">Caroline Galvis Díaz</option>
+                        <option value="Dayanna Montoya Rengifo">Dayanna Montoya Rengifo</option>
+                        <option value="Edwin Andrés Motta Herrera">Edwin Andrés Motta Herrera</option>
+                        <option value="Maria Camila Ramírez Romero">Maria Camila Ramírez Romero</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-grow">
+                <div class="flex flex-col mb-6 border-b pb-4">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-tasks mr-2 text-indigo-500"></i>Lista de Cotejo de Resolución Empática</h2>
+                    <p class="text-sm text-gray-500 mt-1">Actividad: The Classroom Mailbox (Discusión de Dilemas)</p>
+                </div>
+                
+                <div id="rubricContainer" class="space-y-6">
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-3">1. Comprensión del Dilema</h3>
+                        <p class="text-sm text-gray-600 mb-4">Comprende la problemática del dilema local planteado (exclusión, conectividad).</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="comp_dilema" id="comp_dilema_yes" value="yes" data-feedback="Demostraste una excelente comprensión de la problemática local abordada, identificando claramente el núcleo del problema de exclusión.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="comp_dilema_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Logrado)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="comp_dilema" id="comp_dilema_no" value="no" data-feedback="Te invito a reflexionar más profundamente sobre cuál es el problema central en las situaciones planteadas para comprender mejor cómo afecta a los involucrados.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="comp_dilema_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (En Proceso)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-3">2. Uso de Expresiones Funcionales</h3>
+                        <p class="text-sm text-gray-600 mb-4">Utiliza expresiones de sugerencia (If I were you..., Have you thought about...?).</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="uso_expresiones" id="uso_expresiones_yes" value="yes" data-feedback="Utilizaste las expresiones de sugerencia de manera muy natural y comunicativa para proponer ideas. ¡Buen trabajo integrando el vocabulario!">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="uso_expresiones_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Logrado)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="uso_expresiones" id="uso_expresiones_no" value="no" data-feedback="Recuerda practicar las frases de sugerencia estudiadas (como 'If I were you...') para que tu comunicación en inglés sea más efectiva al proponer soluciones.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="uso_expresiones_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (En Proceso)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-3">3. Empatía y Escucha Activa</h3>
+                        <p class="text-sm text-gray-600 mb-4">Demuestra empatía y escucha activa durante la discusión grupal.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="empatia" id="empatia_yes" value="yes" data-feedback="Tu actitud empática y disposición para escuchar activamente a tus compañeros fue evidente durante toda la actividad.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="empatia_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Logrado)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="empatia" id="empatia_no" value="no" data-feedback="Para próximas actividades, intenta escuchar más activamente los puntos de vista de tus compañeros de grupo; el diálogo respetuoso es fundamental.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="empatia_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (En Proceso)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-3">4. Propuesta de Solución</h3>
+                        <p class="text-sm text-gray-600 mb-4">Propone una solución inclusiva en lugar de perpetuar la marginación.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="solucion" id="solucion_yes" value="yes" data-feedback="Tus propuestas de solución fueron muy valiosas e inclusivas. ¡Demostraste un excelente análisis social del entorno!">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="solucion_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Logrado)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="solucion" id="solucion_no" value="no" data-feedback="Es importante que al proponer soluciones pienses siempre en cómo incluir a todos los afectados de manera justa.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="solucion_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (En Proceso)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <label for="teacherComment" class="block text-sm font-medium text-gray-700 mb-2">Comentario General (Opcional pero recomendado)</label>
+                    <textarea id="teacherComment" rows="4" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors" placeholder="Escribe observaciones específicas sobre su participación en el role-play, palabras de aliento o recomendaciones para mejorar..."></textarea>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="generateFeedback()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all flex items-center space-x-2 transform hover:scale-105">
+                        <i class="fas fa-magic"></i>
+                        <span>Generar Feedback Automático</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <div class="w-full md:w-1/3 flex flex-col">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-8 flex-grow h-fit">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-comment-dots mr-2 text-emerald-500"></i>Feedback Generado</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="sendEmail()" id="emailBtn" class="text-emerald-600 hover:text-emerald-700 transition-colors hidden px-2 py-1 rounded hover:bg-emerald-50" title="Enviar por correo electrónico">
+                            <i class="fas fa-paper-plane mr-1"></i> <span class="text-sm font-medium">Enviar</span>
+                        </button>
+                        <button onclick="copyFeedback()" id="copyBtn" class="text-gray-400 hover:text-indigo-600 transition-colors hidden px-2 py-1 rounded hover:bg-indigo-50" title="Copiar al portapapeles">
+                            <i class="fas fa-copy mr-1"></i> <span class="text-sm font-medium">Copiar</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
+                    <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
+                        <i class="fas fa-file-signature text-4xl mb-3"></i>
+                        <p>Selecciona un estudiante, completa la lista de cotejo a la izquierda y presiona "Generar Feedback" para ver el resultado aquí.</p>
+                    </div>
+                </div>
+                
+                <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-3 rounded shadow-xl transform transition-transform duration-300 translate-y-24 opacity-0 flex items-center gap-3 z-50">
+                    <i class="fas fa-check-circle text-emerald-400 text-xl"></i>
+                    <span id="toastMessage" class="font-medium">Copiado al portapapeles</span>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        // Diccionario de correos de los estudiantes (Puedes actualizar estos correos con los reales de tus alumnos)
+        const studentEmails = {
+            "Valentina Álvarez Quinayas": "valentina.alvarez@estudiante.edu.co",
+            "Danna Katherine Cano Pradilla": "danna.cano@estudiante.edu.co",
+            "Michell Andrea Donato Sánchez": "michell.donato@estudiante.edu.co",
+            "Caroline Galvis Díaz": "caroline.galvis@estudiante.edu.co",
+            "Dayanna Montoya Rengifo": "dayanna.montoya@estudiante.edu.co",
+            "Edwin Andrés Motta Herrera": "edwin.motta@estudiante.edu.co",
+            "Maria Camila Ramírez Romero": "maria.ramirez@estudiante.edu.co"
+        };
+
+        function generateFeedback() {
+            const studentSelect = document.getElementById('studentName');
+            const studentName = studentSelect.options[studentSelect.selectedIndex].text;
+            const studentValue = studentSelect.value;
+            const teacherComment = document.getElementById('teacherComment').value;
+            
+            if (!studentValue) {
+                showToast("Por favor, seleccione un estudiante de la lista.", "error");
+                return;
+            }
+
+            // Get all selected radio buttons
+            const criteriaNames = ['comp_dilema', 'uso_expresiones', 'empatia', 'solucion'];
+            let allAnswered = true;
+            let feedbackPoints = [];
+            let yesCount = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    feedbackPoints.push(selectedRadio.getAttribute('data-feedback'));
+                    if(selectedRadio.value === 'yes') yesCount++;
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                 showToast("Por favor, evalúe todos los criterios (Yes / Not Yet).", "warning");
+                 return;
+            }
+
+            // Construct the feedback text
+            const firstName = studentName.split(' ')[0];
+
+            let feedbackText = `Hola ${firstName},\n\n`;
+            feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "The Classroom Mailbox" (Análisis de Dilemas Sociales):\n\n`;
+            
+            feedbackPoints.forEach(point => {
+                feedbackText += `• ${point}\n\n`;
+            });
+
+            if (yesCount === 4) {
+                feedbackText += `¡Excelente trabajo! Has demostrado una gran capacidad para analizar situaciones sociales complejas y usar el inglés como una herramienta de acción social empática.\n\n`;
+            } else if (yesCount >= 2) {
+                feedbackText += `Vas por muy buen camino. Sigue participando activamente y verás cómo tu confianza y tus habilidades en inglés continúan mejorando.\n\n`;
+            } else {
+                feedbackText += `Recuerda que estamos en un proceso de aprendizaje. Te invito a participar más en las próximas actividades; cuentas con todo mi apoyo para mejorar.\n\n`;
+            }
+
+            if (teacherComment.trim() !== "") {
+                feedbackText += `Observación del docente:\n"${teacherComment.trim()}"\n\n`;
+            }
+
+            feedbackText += `Atentamente,\nTu Docente de Inglés`;
+
+            // Display the result
+            const resultDiv = document.getElementById('feedbackResult');
+            resultDiv.innerHTML = `<div class="font-sans text-gray-800 whitespace-pre-wrap">${feedbackText}</div>`;
+            
+            // Show action buttons
+            document.getElementById('copyBtn').classList.remove('hidden');
+            document.getElementById('emailBtn').classList.remove('hidden');
+            
+            // Scroll to top of feedback on mobile
+            if(window.innerWidth < 768) {
+                document.getElementById('feedbackResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function copyFeedback() {
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+            if(!textToCopy || textToCopy.includes("Selecciona un estudiante")) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Feedback copiado al portapapeles", "success");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Feedback copiado al portapapeles", "success");
+                } catch (err) {
+                    showToast("Error al copiar", "error");
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function sendEmail() {
+            const studentSelect = document.getElementById('studentName');
+            const studentName = studentSelect.value;
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+
+            if (!studentName || !textToCopy || textToCopy.includes("Selecciona un estudiante")) {
+                showToast("No hay feedback generado para enviar.", "error");
+                return;
+            }
+
+            // Obtener el correo del diccionario o pedirlo si no está registrado
+            let studentEmail = studentEmails[studentName] || "";
+            if (!studentEmail || studentEmail.includes("estudiante.edu.co")) {
+                const confirmedEmail = prompt(`Confirma o ingresa el correo de ${studentName}:`, studentEmail);
+                if (!confirmedEmail) return;
+                studentEmail = confirmedEmail;
+            }
+
+            // Parámetros que se enviarán a EmailJS (asegúrate de que en tu plantilla de EmailJS uses {{to_name}}, {{to_email}}, {{message}}, {{curso}})
+            const templateParams = {
+                to_name: studentName,
+                to_email: studentEmail,
+                message: textToCopy,
+                curso: "Unidad 1: Dilemas (Grado 9-E)"
+            };
+
+            showToast("Enviando correo al estudiante...", "success");
+
+            // Credenciales integradas
+            emailjs.send('service_468ziai', 'template_6g295jb', templateParams)
+                .then(function(response) {
+                    showToast(`¡Correo enviado con éxito a ${studentName}!`, "success");
+                }, function(error) {
+                    console.error('Error EmailJS:', error);
+                    showToast("Hubo un error al enviar el correo.", "error");
+                });
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            msgEl.textContent = message;
+            
+            if (type === "error" || type === "warning") {
+                icon.className = "fas fa-exclamation-triangle text-amber-400 text-xl";
+            } else {
+                icon.className = "fas fa-check-circle text-emerald-400 text-xl";
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
