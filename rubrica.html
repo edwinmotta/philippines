@@ -56,24 +56,30 @@
 
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-6">
         
-        <!-- Columna Izquierda: Selección de Estudiante y Rúbrica -->
+        <!-- Columna Izquierda: Datos del Estudiante y Rúbrica -->
         <div class="w-full md:w-2/3 flex flex-col gap-6">
             
             <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-indigo-500"></i>Selección de Estudiante</h2>
+                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-indigo-500"></i>Información del Estudiante y Calificación</h2>
                 
-                <div>
-                    <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Estudiante (Grado 9-E)</label>
-                    <select id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-gray-50">
-                        <option value="">Seleccione un estudiante...</option>
-                        <option value="Valentina Álvarez Quinayas">Valentina Álvarez Quinayas</option>
-                        <option value="Danna Katherine Cano Pradilla">Danna Katherine Cano Pradilla</option>
-                        <option value="Michell Andrea Donato Sánchez">Michell Andrea Donato Sánchez</option>
-                        <option value="Caroline Galvis Díaz">Caroline Galvis Díaz</option>
-                        <option value="Dayanna Montoya Rengifo">Dayanna Montoya Rengifo</option>
-                        <option value="Edwin Andrés Motta Herrera">Edwin Andrés Motta Herrera</option>
-                        <option value="Maria Camila Ramírez Romero">Maria Camila Ramírez Romero</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Nombre del estudiante (Texto libre) -->
+                    <div class="md:col-span-1">
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Estudiante</label>
+                        <input type="text" id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-gray-50" placeholder="Ej. Juan Pérez">
+                    </div>
+
+                    <!-- Correo electrónico -->
+                    <div class="md:col-span-1">
+                        <label for="studentEmail" class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
+                        <input type="email" id="studentEmail" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-gray-50" placeholder="correo@estudiante.com">
+                    </div>
+
+                    <!-- Calificación numérica (0.0 a 5.0) -->
+                    <div class="md:col-span-1">
+                        <label for="studentGrade" class="block text-sm font-medium text-gray-700 mb-2">Calificación (0.0 - 5.0)</label>
+                        <input type="number" id="studentGrade" min="0.0" max="5.0" step="0.1" value="5.0" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-gray-50" placeholder="5.0">
+                    </div>
                 </div>
             </section>
 
@@ -205,7 +211,7 @@
                 <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
                     <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
                         <i class="fas fa-file-signature text-4xl mb-3"></i>
-                        <p>Selecciona un estudiante, completa la lista de cotejo a la izquierda y presiona "Generar Feedback" para ver el resultado aquí.</p>
+                        <p>Escribe el nombre y correo del estudiante, completa la lista de cotejo a la izquierda y presiona "Generar Feedback" para ver el resultado aquí.</p>
                     </div>
                 </div>
                 
@@ -220,25 +226,31 @@
     </main>
 
     <script>
-        // Diccionario de correos de los estudiantes
-        const studentEmails = {
-            "Valentina Álvarez Quinayas": "valentina.alvarez@estudiante.edu.co",
-            "Danna Katherine Cano Pradilla": "danna.cano@estudiante.edu.co",
-            "Michell Andrea Donato Sánchez": "michell.donato@estudiante.edu.co",
-            "Caroline Galvis Díaz": "caroline.galvis@estudiante.edu.co",
-            "Dayanna Montoya Rengifo": "dayanna.montoya@estudiante.edu.co",
-            "Edwin Andrés Motta Herrera": "edwin.motta@estudiante.edu.co",
-            "Maria Camila Ramírez Romero": "maria.ramirez@estudiante.edu.co"
-        };
-
         function generateFeedback() {
-            const studentSelect = document.getElementById('studentName');
-            const studentName = studentSelect.options[studentSelect.selectedIndex].text;
-            const studentValue = studentSelect.value;
+            const studentNameInput = document.getElementById('studentName');
+            const studentEmailInput = document.getElementById('studentEmail');
+            const studentGradeInput = document.getElementById('studentGrade');
+            
+            const studentName = studentNameInput.value.trim();
+            const studentEmail = studentEmailInput.value.trim();
+            const studentGrade = studentGradeInput.value.trim();
             const teacherComment = document.getElementById('teacherComment').value;
             
-            if (!studentValue) {
-                showToast("Por favor, seleccione un estudiante de la lista.", "error");
+            if (!studentName) {
+                showToast("Por favor, ingrese el nombre del estudiante.", "error");
+                studentNameInput.focus();
+                return;
+            }
+
+            if (!studentEmail || !studentEmail.includes('@')) {
+                showToast("Por favor, ingrese un correo electrónico válido.", "error");
+                studentEmailInput.focus();
+                return;
+            }
+
+            if (studentGrade === "" || isNaN(studentGrade) || studentGrade < 0 || studentGrade > 5) {
+                showToast("Por favor, asigne una calificación válida entre 0.0 y 5.0.", "error");
+                studentGradeInput.focus();
                 return;
             }
 
@@ -265,6 +277,7 @@
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hola ${firstName},\n\n`;
+            feedbackText += `Calificación: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)\n\n`;
             feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "The Classroom Mailbox" (Análisis de Dilemas Sociales):\n\n`;
             
             feedbackPoints.forEach(point => {
@@ -298,7 +311,7 @@
 
         function copyFeedback() {
             const textToCopy = document.getElementById('feedbackResult').innerText;
-            if(!textToCopy || textToCopy.includes("Selecciona un estudiante")) return;
+            if(!textToCopy || textToCopy.includes("Escribe el nombre")) return;
 
             navigator.clipboard.writeText(textToCopy).then(() => {
                 showToast("Feedback copiado al portapapeles", "success");
@@ -319,21 +332,15 @@
         }
 
         function sendEmail() {
-            const studentSelect = document.getElementById('studentName');
-            const studentName = studentSelect.value;
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentEmail = document.getElementById('studentEmail').value.trim();
+            const studentGrade = document.getElementById('studentGrade').value.trim();
             const textToCopy = document.getElementById('feedbackResult').innerText;
             const teacherComment = document.getElementById('teacherComment').value;
 
-            if (!studentName || !textToCopy || textToCopy.includes("Selecciona un estudiante")) {
-                showToast("No hay feedback generado para enviar.", "error");
+            if (!studentName || !studentEmail || !textToCopy || textToCopy.includes("Escribe el nombre")) {
+                showToast("Por favor, genere el feedback y verifique los datos antes de enviar.", "error");
                 return;
-            }
-
-            let studentEmail = studentEmails[studentName] || "";
-            if (!studentEmail || studentEmail.includes("estudiante.edu.co")) {
-                const confirmedEmail = prompt(`Confirma o ingresa el correo de ${studentName}:`, studentEmail);
-                if (!confirmedEmail) return;
-                studentEmail = confirmedEmail;
             }
 
             // Paquete completo de variables para EmailJS
@@ -345,7 +352,7 @@
                 message: textToCopy,
                 feedback: textToCopy,
                 comentario: teacherComment.trim() || "Sin comentarios adicionales",
-                nota: "Evaluación formativa completada"
+                nota: `${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)`
             };
 
             showToast("Enviando correo al estudiante...", "success");
