@@ -85,44 +85,71 @@
 
             <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-grow">
                 <div class="flex flex-col mb-6 border-b pb-4">
-                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-microphone-alt mr-2 text-purple-600"></i>Rúbrica Analítica de Producción Oral</h2>
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-microphone-alt mr-2 text-purple-600"></i>Rúbrica Analítica Cuantitativa (Producción Oral)</h2>
                     <p class="text-sm text-gray-500 mt-1">Actividad: Intercultural Podcast (Unidad 3)</p>
                 </div>
                 
-                <div id="rubricContainer" class="space-y-6">
+                <div id="rubricContainer" class="space-y-8">
+                    
                     <!-- Criterio 1: Fluidez e Inteligibilidad (Fonología) -->
                     <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                        <h3 class="font-medium text-gray-800 mb-2">1. Fluidez e Inteligibilidad (Fonología)</h3>
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-wave-square text-purple-600 mr-2"></i>1. Fluidez e Inteligibilidad (Fonología)</h3>
                         <p class="text-sm text-gray-600 mb-4">Evalúa el ritmo adecuado, pausas naturales, entonación y claridad del mensaje.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        
+                        <div class="space-y-3">
+                            <!-- Nivel 5 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_excelente" value="3" data-feedback="Hablas con un ritmo adecuado, pausas naturales y entonación que facilita la comprensión total del mensaje.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="fl_excelente">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-check-circle mr-2 status-icon text-purple-600"></i>
-                                        <span class="font-semibold text-sm">Excelente (Advanced)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_5" value="5" data-feedback="Nivel 5 (Excelente): Habla con un ritmo sobresaliente, pausas perfectamente naturales y una entonación que facilita la comprensión total y el impacto del mensaje.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="fl_5">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 5 (Sobresaliente)</span>
+                                        <span class="text-xs text-gray-600">Habla con ritmo adecuado, pausas naturales y entonación que facilita la comprensión total del mensaje con gran naturalidad.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Habla con ritmo adecuado, pausas naturales y entonación que facilita la comprensión total del mensaje.</span>
                                 </label>
                             </div>
+                            <!-- Nivel 4 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_satisfactorio" value="2" data-feedback="La producción es comprensible, aunque presenta algunas interferencias del ritmo silábico de su L1 o dudas ocasionales.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="fl_satisfactorio">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
-                                        <span class="font-semibold text-sm">Satisfactorio (Developing)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_4" value="4" data-feedback="Nivel 4 (Muy Bueno): Su producción oral es clara y fluida en su mayoría, con mínimos tropiezos que no afectan la comunicación.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="fl_4">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 4 (Notable)</span>
+                                        <span class="text-xs text-gray-600">Muestra buen dominio del ritmo y entonación; la comunicación es fluida con leves vacilaciones ocasionales.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">La producción es comprensible, aunque presenta algunas interferencias del ritmo silábico de su L1 o dudas ocasionales.</span>
                                 </label>
                             </div>
+                            <!-- Nivel 3 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_apoyo" value="1" data-feedback="Las pausas prolongadas y errores fonéticos frecuentes dificultan significativamente la comprensión del mensaje.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="fl_apoyo">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
-                                        <span class="font-semibold text-sm">Requiere Apoyo (Beginning)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_3" value="3" data-feedback="Nivel 3 (Satisfactorio): La producción es comprensible, aunque presenta algunas interferencias del ritmo silábico de su L1 o dudas ocasionales.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="fl_3">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 3 (Satisfactorio)</span>
+                                        <span class="text-xs text-gray-600">La producción es comprensible, aunque presenta algunas interferencias del ritmo silábico de su L1 o dudas ocasionales.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Las pausas prolongadas y errores fonéticos frecuentes dificultan significativamente la comprensión del mensaje.</span>
+                                </label>
+                            </div>
+                            <!-- Nivel 2 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_2" value="2" data-feedback="Nivel 2 (En Proceso): Las pausas frecuentes y el acento marcado dificultan parcialmente la fluidez y comprensión inicial del mensaje.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="fl_2">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 2 (En Proceso)</span>
+                                        <span class="text-xs text-gray-600">Presenta pausas recurrentes y marcada influencia de la L1 que exigen mayor esfuerzo de escucha al interlocutor.</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <!-- Nivel 1 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_1" value="1" data-feedback="Nivel 1 (Requiere Apoyo): Las pausas prolongadas y errores fonéticos frecuentes dificultan significativamente la comprensión del mensaje.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="fl_1">
+                                    <i class="fas fa-exclamation-circle mr-3 mt-1 status-icon text-rose-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-rose-900 block">Nivel 1 (Requiere Apoyo)</span>
+                                        <span class="text-xs text-gray-600">Las pausas prolongadas y errores fonéticos frecuentes dificultan significativamente la comprensión del mensaje.</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -130,37 +157,63 @@
 
                     <!-- Criterio 2: Conciencia Intercultural -->
                     <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                        <h3 class="font-medium text-gray-800 mb-2">2. Conciencia Intercultural</h3>
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-globe-americas text-purple-600 mr-2"></i>2. Conciencia Intercultural</h3>
                         <p class="text-sm text-gray-600 mb-4">Contrasta características de la cultura local de Buga con dinámicas globales, emitiendo juicios respetuosos.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        
+                        <div class="space-y-3">
+                            <!-- Nivel 5 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_excelente" value="3" data-feedback="Contrasta acertadamente características de la cultura local de Buga con dinámicas globales, emitiendo juicios respetuosos.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="ci_excelente">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-check-circle mr-2 status-icon text-purple-600"></i>
-                                        <span class="font-semibold text-sm">Excelente (Advanced)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_5" value="5" data-feedback="Nivel 5 (Excelente): Realiza un contraste magistral, crítico y profundo entre la cultura local de Buga y dinámicas globales, con altísimo respeto.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="ci_5">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 5 (Sobresaliente)</span>
+                                        <span class="text-xs text-gray-600">Contrasta de manera analítica y profunda la cultura local de Buga con el entorno global, aportando una visión crítica y respetuosa.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Contrasta acertadamente características de la cultura local de Buga con dinámicas globales, emitiendo juicios respetuosos.</span>
                                 </label>
                             </div>
+                            <!-- Nivel 4 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_satisfactorio" value="2" data-feedback="Menciona aspectos de su cultura y de otras, pero la conexión o comparación resulta superficial.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="ci_satisfactorio">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
-                                        <span class="font-semibold text-sm">Satisfactorio (Developing)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_4" value="4" data-feedback="Nivel 4 (Notable): Relaciona de forma clara y respetuosa elementos locales y globales con buenos argumentos culturales.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="ci_4">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 4 (Notable)</span>
+                                        <span class="text-xs text-gray-600">Identifica y conecta adecuadamente rasgos de Buga con contextos globales mediante reflexiones pertinentes.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Menciona aspectos de su cultura y de otras, pero la conexión o comparación resulta superficial.</span>
                                 </label>
                             </div>
+                            <!-- Nivel 3 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_apoyo" value="1" data-feedback="No logra identificar ni articular características culturales locales frente a las extranjeras.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="ci_apoyo">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
-                                        <span class="font-semibold text-sm">Requiere Apoyo (Beginning)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_3" value="3" data-feedback="Nivel 3 (Satisfactorio): Menciona aspectos de su cultura y de otras, pero la conexión o comparación resulta superficial.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="ci_3">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 3 (Satisfactorio)</span>
+                                        <span class="text-xs text-gray-600">Menciona aspectos de su cultura y de otras, pero la conexión o comparación resulta superficial.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">No logra identificar ni articular características culturales locales frente a las extranjeras.</span>
+                                </label>
+                            </div>
+                            <!-- Nivel 2 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_2" value="2" data-feedback="Nivel 2 (En Proceso): Menciona rasgos culturales aislados sin lograr articular una comparación coherente entre lo local y lo global.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="ci_2">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 2 (En Proceso)</span>
+                                        <span class="text-xs text-gray-600">Apenas nombra elementos culturales sin profundizar en su significado intercultural o relación contextual.</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <!-- Nivel 1 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_1" value="1" data-feedback="Nivel 1 (Requiere Apoyo): No logra identificar ni articular características culturales locales frente a las extranjeras.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="ci_1">
+                                    <i class="fas fa-exclamation-circle mr-3 mt-1 status-icon text-rose-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-rose-900 block">Nivel 1 (Requiere Apoyo)</span>
+                                        <span class="text-xs text-gray-600">No logra identificar ni articular características culturales locales frente a las extranjeras.</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -168,41 +221,68 @@
 
                     <!-- Criterio 3: Integración Lingüística (Gramática y Léxico) -->
                     <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                        <h3 class="font-medium text-gray-800 mb-2">3. Integración Lingüística (Gramática y Léxico)</h3>
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-book-reader text-purple-600 mr-2"></i>3. Integración Lingüística (Gramática y Léxico)</h3>
                         <p class="text-sm text-gray-600 mb-4">Integra expresiones para dar opinión (U3), normas (U2) y vocabulario de empatía (U1).</p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        
+                        <div class="space-y-3">
+                            <!-- Nivel 5 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_excelente" value="3" data-feedback="Integra fluidamente expresiones para dar opinión (U3), normas (U2) y vocabulario de empatía (U1).">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="il_excelente">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-check-circle mr-2 status-icon text-purple-600"></i>
-                                        <span class="font-semibold text-sm">Excelente (Advanced)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_5" value="5" data-feedback="Nivel 5 (Excelente): Integra de manera impecable, creativa y avanzada las estructuras de opinión (U3), normas (U2) y vocabulario de empatía (U1).">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="il_5">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 5 (Sobresaliente)</span>
+                                        <span class="text-xs text-gray-600">Uso magistral y preciso del vocabulario y estructuras de las tres unidades con total naturalidad comunicativa.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Integra fluidamente expresiones para dar opinión (U3), normas (U2) y vocabulario de empatía (U1).</span>
                                 </label>
                             </div>
+                            <!-- Nivel 4 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_satisfactorio" value="2" data-feedback="Utiliza estructuras clave, pero su aplicación es mecánica o presenta errores gramaticales que no alteran gravemente el significado.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="il_satisfactorio">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
-                                        <span class="font-semibold text-sm">Satisfactorio (Developing)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_4" value="4" data-feedback="Nivel 4 (Notable): Utiliza correctamente el repertorio gramatical y léxico de las unidades con alta efectividad.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="il_4">
+                                    <i class="fas fa-check-circle mr-3 mt-1 status-icon text-purple-600 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-purple-900 block">Nivel 4 (Notable)</span>
+                                        <span class="text-xs text-gray-600">Aplica con propiedad las expresiones funcionales y modales requeridas, manteniendo corrección general.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">Utiliza estructuras clave, pero su aplicación es mecánica o presenta errores gramaticales que no alteran gravemente el significado.</span>
                                 </label>
                             </div>
+                            <!-- Nivel 3 -->
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_apoyo" value="1" data-feedback="El uso de las estructuras estudiadas es muy escaso y el vocabulario no corresponde a los ejes temáticos abordados.">
-                                <label class="rubric-label flex flex-col p-4 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="il_apoyo">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
-                                        <span class="font-semibold text-sm">Requiere Apoyo (Beginning)</span>
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_3" value="3" data-feedback="Nivel 3 (Satisfactorio): Utiliza estructuras clave, pero su aplicación es mecánica o presenta errores gramaticales que no alteran gravemente el significado.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="il_3">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 3 (Satisfactorio)</span>
+                                        <span class="text-xs text-gray-600">Utiliza estructuras clave, pero su aplicación es mecánica o presenta errores gramaticales que no alteran gravemente el significado.</span>
                                     </div>
-                                    <span class="text-xs text-gray-600 leading-relaxed">El uso de las estructuras estudiadas es muy escaso y el vocabulario no corresponde a los ejes temáticos abordados.</span>
+                                </label>
+                            </div>
+                            <!-- Nivel 2 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_2" value="2" data-feedback="Nivel 2 (En Proceso): Utiliza pocas estructuras de las unidades y muestra confusiones frecuentes en la gramática y el vocabulario.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="il_2">
+                                    <i class="fas fa-clock mr-3 mt-1 status-icon text-amber-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-gray-800 block">Nivel 2 (En Proceso)</span>
+                                        <span class="text-xs text-gray-600">Incorpora elementos de las unidades de forma limitada y con errores gramaticales que a veces afectan el mensaje.</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <!-- Nivel 1 -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_1" value="1" data-feedback="Nivel 1 (Requiere Apoyo): El uso de las estructuras estudiadas es muy escaso y el vocabulario no corresponde a los ejes temáticos abordados.">
+                                <label class="rubric-label flex items-start p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="il_1">
+                                    <i class="fas fa-exclamation-circle mr-3 mt-1 status-icon text-rose-500 text-lg"></i>
+                                    <div>
+                                        <span class="font-bold text-sm text-rose-900 block">Nivel 1 (Requiere Apoyo)</span>
+                                        <span class="text-xs text-gray-600">El uso de las estructuras estudiadas es muy escaso y el vocabulario no corresponde a los ejes temáticos abordados.</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-gray-200">
@@ -237,7 +317,7 @@
                 <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
                     <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
                         <i class="fas fa-file-signature text-4xl mb-3"></i>
-                        <p>Escribe el nombre y correo del estudiante, evalúa los criterios y presiona "Generar Feedback" para ver el resultado aquí.</p>
+                        <p>Escribe el nombre y correo del estudiante, evalúa los criterios de 1 a 5 y presiona "Generar Feedback" para ver el resultado aquí.</p>
                     </div>
                 </div>
                 
@@ -303,16 +383,16 @@
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hola ${firstName},\n\n`;
-            feedbackText += `Calificación: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)\n\n`;
-            feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "Intercultural Podcast" (Unidad 3):\n\n`;
+            feedbackText += `Calificación cuantitativa: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)\n\n`;
+            feedbackText += `A continuación te presento la retroalimentación analítica de tu participación en la actividad "Intercultural Podcast" (Unidad 3):\n\n`;
             
             feedbackPoints.forEach(point => {
                 feedbackText += `• ${point}\n\n`;
             });
 
-            if (totalScore >= 8) {
+            if (totalScore >= 13) {
                 feedbackText += `¡Excelente trabajo en tu podcast! Demostraste un dominio fonético sobresaliente, una aguda conciencia intercultural y una integración lingüística impecable.\n\n`;
-            } else if (totalScore >= 5) {
+            } else if (totalScore >= 8) {
                 feedbackText += `Vas por muy buen camino con tu producción oral. Continúa practicando tu fluidez y profundizando en las comparaciones culturales para seguir creciendo.\n\n`;
             } else {
                 feedbackText += `Estamos en un proceso de aprendizaje formativo. Te animo a repasar los contenidos y ensayar con más frecuencia tu locución para mejorar en las próximas grabaciones.\n\n`;
