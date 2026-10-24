@@ -60,10 +60,10 @@
         <div class="w-full md:w-2/3 flex flex-col gap-6">
             
             <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-teal-600"></i>Información del Estudiante y Calificación</h2>
+                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-teal-600"></i>Información del Estudiante y Calificación Automática</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Nombre del estudiante (Texto libre) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <!-- Nombre del estudiante -->
                     <div class="md:col-span-1">
                         <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Estudiante</label>
                         <input type="text" id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors bg-gray-50" placeholder="Ej. Juan Pérez">
@@ -75,10 +75,10 @@
                         <input type="email" id="studentEmail" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors bg-gray-50" placeholder="correo@estudiante.com">
                     </div>
 
-                    <!-- Calificación numérica (0.0 a 5.0) -->
-                    <div class="md:col-span-1">
-                        <label for="studentGrade" class="block text-sm font-medium text-gray-700 mb-2">Calificación (0.0 - 5.0)</label>
-                        <input type="number" id="studentGrade" min="0.0" max="5.0" step="0.1" value="5.0" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors bg-gray-50" placeholder="5.0">
+                    <!-- Calificación Automática Calculada -->
+                    <div class="md:col-span-1 bg-teal-50 border border-teal-200 rounded-lg p-3 text-center flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Nota Automática (0.0 - 5.0)</span>
+                        <span id="autoGradeDisplay" class="text-2xl font-bold text-teal-900 mt-1">0.0</span>
                     </div>
                 </div>
             </section>
@@ -96,7 +96,7 @@
                         <p class="text-sm text-gray-600 mb-4">Aplica correctamente <span class="font-semibold text-teal-700">must/mustn't, should, can</span> según la intención (obligación, consejo, permiso).</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_logrado" value="3" data-feedback="Aplicaste correctamente los verbos modales (must/mustn't, should, can) demostrando un dominio preciso de la intención comunicativa (obligación, consejo y permiso).">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_logrado" value="3" onchange="calculateGrade()" data-feedback="Aplicaste correctamente los verbos modales (must/mustn't, should, can) demostrando un dominio preciso de la intención comunicativa (obligación, consejo y permiso).">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_logrado">
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
@@ -106,7 +106,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_proceso" value="2" data-feedback="Utilizaste algunos verbos modales, pero aún debes repasar su aplicación adecuada según la intención de obligación o consejo.">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_proceso" value="2" onchange="calculateGrade()" data-feedback="Utilizaste algunos verbos modales, pero aún debes repasar su aplicación adecuada según la intención de obligación o consejo.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_proceso">
                                     <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
                                     <div>
@@ -116,7 +116,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_mejora" value="1" data-feedback="Es necesario que refuerces el uso de los verbos modales (must, should, can) para expresar adecuadamente normas y obligaciones.">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_mejora" value="1" onchange="calculateGrade()" data-feedback="Es necesario que refuerces el uso de los verbos modales (must, should, can) para expresar adecuadamente normas y obligaciones.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
@@ -134,7 +134,7 @@
                         <p class="text-sm text-gray-600 mb-4">Las normas propuestas responden a un análisis ético y favorecen el respeto y la convivencia armónica.</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_logrado" value="3" data-feedback="Tus propuestas reflejaron un excelente análisis ético, priorizando siempre el respeto y la convivencia armónica en la comunidad escolar.">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_logrado" value="3" onchange="calculateGrade()" data-feedback="Tus propuestas reflejaron un excelente análisis ético, priorizando siempre el respeto y la convivencia armónica en la comunidad escolar.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_logrado">
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
@@ -144,7 +144,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_proceso" value="2" data-feedback="Las normas propuestas muestran un esfuerzo por mejorar la convivencia, aunque se puede profundizar más en el análisis ético y el respeto mutuo.">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_proceso" value="2" onchange="calculateGrade()" data-feedback="Las normas propuestas muestran un esfuerzo por mejorar la convivencia, aunque se puede profundizar más en el análisis ético y el respeto mutuo.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_proceso">
                                     <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
                                     <div>
@@ -154,7 +154,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_mejora" value="1" data-feedback="Te invito a reflexionar más sobre cómo tus propuestas de normas pueden favorecer el respeto y la convivencia armónica del grupo.">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_mejora" value="1" onchange="calculateGrade()" data-feedback="Te invito a reflexionar más sobre cómo tus propuestas de normas pueden favorecer el respeto y la convivencia armónica del grupo.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
@@ -172,7 +172,7 @@
                         <p class="text-sm text-gray-600 mb-4">Mantiene su rol asignado e interactúa fluidamente con sus pares argumentando su posición.</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_logrado" value="3" data-feedback="Mantuviste tu rol asignado con gran naturalidad e interactuaste fluidamente con tus pares, argumentando con solidez tu posición.">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_logrado" value="3" onchange="calculateGrade()" data-feedback="Mantuviste tu rol asignado con gran naturalidad e interactuaste fluidamente con tus pares, argumentando con solidez tu posición.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_logrado">
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
@@ -182,7 +182,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_proceso" value="2" data-feedback="Participaste en el role-play manteniendo tu rol, pero puedes trabajar en lograr una mayor fluidez e interacción con tus compañeros al argumentar.">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_proceso" value="2" onchange="calculateGrade()" data-feedback="Participaste en el role-play manteniendo tu rol, pero puedes trabajar en lograr una mayor fluidez e interacción con tus compañeros al argumentar.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_proceso">
                                     <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
                                     <div>
@@ -192,7 +192,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_mejora" value="1" data-feedback="Es importante asumir con mayor compromiso el rol asignado y participar activamente en la argumentación junto a tus compañeros.">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_mejora" value="1" onchange="calculateGrade()" data-feedback="Es importante asumir con mayor compromiso el rol asignado y participar activamente en la argumentación junto a tus compañeros.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
@@ -237,7 +237,7 @@
                 <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
                     <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
                         <i class="fas fa-file-signature text-4xl mb-3"></i>
-                        <p>Escribe el nombre y correo del estudiante, califica la escala valorativa y presiona "Generar Feedback" para ver el resultado aquí.</p>
+                        <p>Escribe el nombre y correo del estudiante, evalúa los criterios y presiona "Generar Feedback" para ver el resultado aquí.</p>
                     </div>
                 </div>
                 
@@ -252,14 +252,37 @@
     </main>
 
     <script>
+        // Función para calcular la nota automáticamente basada en la escala de 1 a 3 convertida a 0.0 - 5.0
+        function calculateGrade() {
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            let totalScore = 0;
+            let answeredCount = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    totalScore += parseInt(selectedRadio.value);
+                    answeredCount++;
+                }
+            });
+
+            const gradeDisplay = document.getElementById('autoGradeDisplay');
+            if (answeredCount > 0) {
+                const average = totalScore / answeredCount; // Promedio entre 1 y 3
+                // Convierte la escala de 1-3 a una nota cuantitativa de 1.0 a 5.0
+                const calculatedGrade = 1.0 + ((average - 1) / 2) * 4.0;
+                gradeDisplay.textContent = calculatedGrade.toFixed(1);
+            } else {
+                gradeDisplay.textContent = "0.0";
+            }
+        }
+
         function generateFeedback() {
             const studentNameInput = document.getElementById('studentName');
             const studentEmailInput = document.getElementById('studentEmail');
-            const studentGradeInput = document.getElementById('studentGrade');
             
             const studentName = studentNameInput.value.trim();
             const studentEmail = studentEmailInput.value.trim();
-            const studentGrade = studentGradeInput.value.trim();
             const teacherComment = document.getElementById('teacherComment').value;
             
             if (!studentName) {
@@ -271,12 +294,6 @@
             if (!studentEmail || !studentEmail.includes('@')) {
                 showToast("Por favor, ingrese un correo electrónico válido.", "error");
                 studentEmailInput.focus();
-                return;
-            }
-
-            if (studentGrade === "" || isNaN(studentGrade) || studentGrade < 0 || studentGrade > 5) {
-                showToast("Por favor, asigne una calificación válida entre 0.0 y 5.0.", "error");
-                studentGradeInput.focus();
                 return;
             }
 
@@ -300,19 +317,21 @@
                  return;
             }
 
+            const average = totalScore / criteriaNames.length;
+            const calculatedGrade = (1.0 + ((average - 1) / 2) * 4.0).toFixed(1);
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hola ${firstName},\n\n`;
-            feedbackText += `Calificación: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)\n\n`;
+            feedbackText += `Calificación cuantitativa: ${calculatedGrade} / 5.0 (Evaluación formativa completada)\n\n`;
             feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "Asamblea Escolar de Normas" (Unidad 2):\n\n`;
             
             feedbackPoints.forEach(point => {
                 feedbackText += `• ${point}\n\n`;
             });
 
-            if (totalScore >= 8) {
+            if (calculatedGrade >= 4.0) {
                 feedbackText += `¡Excelente desempeño! Demostraste un dominio sólido de los modales y una gran capacidad argumentativa orientada a la convivencia pacífica.\n\n`;
-            } else if (totalScore >= 5) {
+            } else if (calculatedGrade >= 3.0) {
                 feedbackText += `Vas por muy buen camino. Continúa fortaleciendo el uso de las estructuras gramaticales y tu participación activa en los debates escolares.\n\n`;
             } else {
                 feedbackText += `Estamos en un proceso de aprendizaje formativo. Te animo a repasar los modales y a comprometerte más con las dinámicas de argumentación grupal.\n\n`;
@@ -360,7 +379,6 @@
         function sendEmail() {
             const studentName = document.getElementById('studentName').value.trim();
             const studentEmail = document.getElementById('studentEmail').value.trim();
-            const studentGrade = document.getElementById('studentGrade').value.trim();
             const textToCopy = document.getElementById('feedbackResult').innerText;
             const teacherComment = document.getElementById('teacherComment').value;
 
@@ -368,6 +386,16 @@
                 showToast("Por favor, genere el feedback y verifique los datos antes de enviar.", "error");
                 return;
             }
+
+            // Calcular nota actual para el correo
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            let totalScore = 0;
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) totalScore += parseInt(selectedRadio.value);
+            });
+            const average = totalScore / criteriaNames.length;
+            const calculatedGrade = (1.0 + ((average - 1) / 2) * 4.0).toFixed(1);
 
             const templateParams = {
                 to_name: studentName,
@@ -377,7 +405,7 @@
                 message: textToCopy,
                 feedback: textToCopy,
                 comentario: teacherComment.trim() || "Sin comentarios adicionales",
-                nota: `${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)`
+                nota: `${calculatedGrade} / 5.0 (Evaluación formativa completada)`
             };
 
             showToast("Enviando correo al estudiante...", "success");
