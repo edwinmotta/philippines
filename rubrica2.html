@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -203,6 +204,44 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Criterio 4: Invariabilidad y Control Fonológico de Modales (Nueva morfología/fonología) -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-2">4. Invariabilidad de Modales y Fonología (Evitar Sobregeneralización)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Muestra conciencia morfológica sobre la invariabilidad de los modales (evitando la sobregeneralización de la regla de la tercera persona con "-s", ej. <em>he must</em> en lugar de <em>he musts</em>) y precisión fonológica.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_logrado" value="3" onchange="calculateGrade()" data-feedback="Demostraste total conciencia morfológica sobre la invariabilidad de los verbos modales, evitando con éxito la sobregeneralización de la regla de la tercera persona con '-s' (usando correctamente formas como he must). Además, tu control fonológico fue claro y preciso.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_logrado">
+                                    <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Logrado</span>
+                                        <span class="text-xs text-gray-500">Sin sobregeneralización y alta fonética</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_proceso" value="2" onchange="calculateGrade()" data-feedback="Utilizaste los verbos modales de forma razonable, aunque ocasionalmente caíste en sobregeneralización al aplicar la regla de la tercera persona con '-s' a un modal. Debes refinar este aspecto morfológico y tu claridad fonológica.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_proceso">
+                                    <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">En Proceso</span>
+                                        <span class="text-xs text-gray-500">Ocasionales deslices de '-s'</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_mejora" value="1" onchange="calculateGrade()" data-feedback="Es necesario trabajar en la invariabilidad de los modales; recuerda que los modales nunca llevan '-s' en la tercera persona (evitando sobregeneralizaciones como he musts). Practica su estructura morfológica y fonética.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_mejora">
+                                    <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Por Mejorar</span>
+                                        <span class="text-xs text-gray-500">Sobregeneralización frecuente</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-gray-200">
@@ -252,9 +291,9 @@
     </main>
 
     <script>
-        // Función para calcular la nota automáticamente basada en la escala de 1 a 3 convertida a 0.0 - 5.0
+        // Función para calcular la nota automáticamente basada en la escala de 1 a 3 convertida a 0.0 - 5.0 (4 criterios)
         function calculateGrade() {
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let totalScore = 0;
             let answeredCount = 0;
 
@@ -297,7 +336,7 @@
                 return;
             }
 
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let allAnswered = true;
             let feedbackPoints = [];
             let totalScore = 0;
@@ -322,7 +361,7 @@
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hola ${firstName},\n\n`;
-            feedbackText += `Calificación cuantitativa: ${calculatedGrade} / 5.0 (Evaluación formativa completada)\n\n`;
+            feedbackText += `Calificación cuantitativa: ${calculatedGrade} / 5.0 (Assessment Completed)\n\n`;
             feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "Asamblea Escolar de Normas" (Unidad 2):\n\n`;
             
             feedbackPoints.forEach(point => {
@@ -330,11 +369,11 @@
             });
 
             if (calculatedGrade >= 4.0) {
-                feedbackText += `¡Excelente desempeño! Demostraste un dominio sólido de los modales y una gran capacidad argumentativa orientada a la convivencia pacífica.\n\n`;
+                feedbackText += `¡Excelente desempeño! Demostraste un dominio sólido de los modales, de su invariabilidad morfológica y una gran capacidad argumentativa orientada a la convivencia pacífica.\n\n`;
             } else if (calculatedGrade >= 3.0) {
-                feedbackText += `Vas por muy buen camino. Continúa fortaleciendo el uso de las estructuras gramaticales y tu participación activa en los debates escolares.\n\n`;
+                feedbackText += `Vas por muy buen camino. Continúa fortaleciendo el uso de las estructuras gramaticales, evitando la sobregeneralización y mejorando tu participación activa en los debates escolares.\n\n`;
             } else {
-                feedbackText += `Estamos en un proceso de aprendizaje formativo. Te animo a repasar los modales y a comprometerte más con las dinámicas de argumentación grupal.\n\n`;
+                feedbackText += `Estamos en un proceso de aprendizaje formativo. Te animo a repasar los modales y la estructura morfológica para comprometerte más con las dinámicas de argumentación grupal.\n\n`;
             }
 
             if (teacherComment.trim() !== "") {
@@ -388,7 +427,7 @@
             }
 
             // Calcular nota actual para el correo
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let totalScore = 0;
             criteriaNames.forEach(name => {
                 const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
@@ -405,7 +444,7 @@
                 message: textToCopy,
                 feedback: textToCopy,
                 comentario: teacherComment.trim() || "Sin comentarios adicionales",
-                nota: `${calculatedGrade} / 5.0 (Evaluación formativa completada)`
+                nota: `${calculatedGrade} / 5.0 (Assessment Completed)`
             };
 
             showToast("Enviando correo al estudiante...", "success");
