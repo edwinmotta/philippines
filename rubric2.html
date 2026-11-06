@@ -85,7 +85,7 @@
 
             <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-grow">
                 <div class="flex flex-col mb-6 border-b pb-4">
-                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-tasks mr-2 text-teal-600"></i>Argumentation Rating Scale</h2>
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-tasks mr-2 text-teal-600"></i>Argumentation Evaluative Scale</h2>
                     <p class="text-sm text-gray-500 mt-1">Activity: School Rules Assembly (Unit 2)</p>
                 </div>
                 
@@ -93,10 +93,10 @@
                     <!-- Criterion 1: Modal Verbs -->
                     <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
                         <h3 class="font-medium text-gray-800 mb-2">1. Use of Modal Verbs</h3>
-                        <p class="text-sm text-gray-600 mb-4">Correctly applies <span class="font-semibold text-teal-700">must/mustn't, should, can</span> according to communicative intent (obligation, advice, permission).</p>
+                        <p class="text-sm text-gray-600 mb-4">Correctly applies <span class="font-semibold text-teal-700">must/mustn't, should, can</span> according to intent (obligation, advice, permission).</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_logrado" value="3" onchange="calculateGrade()" data-feedback="You correctly applied modal verbs (must/mustn't, should, can), demonstrating a precise command of communicative intent (obligation, advice, and permission).">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_logrado" value="3" onchange="calculateGrade()" data-feedback="You correctly applied modal verbs (must/mustn't, should, can) demonstrating precise command of communicative intent (obligation, advice, and permission).">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_logrado">
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
@@ -106,7 +106,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_proceso" value="2" onchange="calculateGrade()" data-feedback="You used some modal verbs, but you still need to review their proper application according to the intent of obligation or advice.">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_proceso" value="2" onchange="calculateGrade()" data-feedback="You used some modal verbs, but you still need to review their proper application regarding obligation or advice intent.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_proceso">
                                     <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
                                     <div>
@@ -116,7 +116,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_mejora" value="1" onchange="calculateGrade()" data-feedback="It is necessary for you to reinforce the use of modal verbs (must, should, can) to adequately express rules and obligations.">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_mejora" value="1" onchange="calculateGrade()" data-feedback="It is necessary to reinforce your use of modal verbs (must, should, can) to properly express rules and obligations.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
@@ -131,10 +131,10 @@
                     <!-- Criterion 2: Moral Judgment and Citizenship -->
                     <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
                         <h3 class="font-medium text-gray-800 mb-2">2. Moral Judgment and Citizenship</h3>
-                        <p class="text-sm text-gray-600 mb-4">The proposed rules respond to ethical analysis and promote respect and harmonious coexistence.</p>
+                        <p class="text-sm text-gray-600 mb-4">Proposed rules reflect ethical analysis and foster respect and harmonious coexistence.</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_logrado" value="3" onchange="calculateGrade()" data-feedback="Your proposals reflected an excellent ethical analysis, always prioritizing respect and harmonious coexistence in the school community.">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_logrado" value="3" onchange="calculateGrade()" data-feedback="Your proposals reflected excellent ethical analysis, always prioritizing respect and harmonious coexistence within the school community.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_logrado">
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
@@ -154,12 +154,12 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_mejora" value="1" onchange="calculateGrade()" data-feedback="I invite you to reflect more on how your rule proposals can foster respect and harmonious group coexistence.">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_mejora" value="1" onchange="calculateGrade()" data-feedback="I invite you to reflect more on how your proposed rules can foster respect and harmonious group coexistence.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
                                         <span class="font-semibold text-sm block">Needs Improvement</span>
-                                        <span class="text-xs text-gray-500">Little focus on coexistence</span>
+                                        <span class="text-xs text-gray-500">Low focus on coexistence</span>
                                     </div>
                                 </label>
                             </div>
@@ -177,12 +177,12 @@
                                     <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
                                     <div>
                                         <span class="font-semibold text-sm block">Achieved</span>
-                                        <span class="text-xs text-gray-500">Fluency and solidity in role</span>
+                                        <span class="text-xs text-gray-500">Fluency and solid role</span>
                                     </div>
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_proceso" value="2" onchange="calculateGrade()" data-feedback="You participated in the role-play maintaining your role, but you can work on achieving greater fluency and interaction with your classmates when arguing.">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_proceso" value="2" onchange="calculateGrade()" data-feedback="You participated in the role-play while keeping your role, but you can work on achieving greater fluency and interaction with your peers when arguing.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_proceso">
                                     <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
                                     <div>
@@ -192,7 +192,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_mejora" value="1" onchange="calculateGrade()" data-feedback="It is important to take on the assigned role with greater commitment and participate actively in the argumentation alongside your peers.">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_mejora" value="1" onchange="calculateGrade()" data-feedback="It is important to take on your assigned role with greater commitment and actively participate in the argumentation along with your peers.">
                                 <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_mejora">
                                     <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
                                     <div>
@@ -203,11 +203,49 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Criterion 4: Modal Invariability & Phonological Control (Avoiding Overgeneralization) -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-2">4. Modal Invariability & Phonology (Avoiding Overgeneralization)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Shows morphological awareness of modal invariability (avoiding the overgeneralization of the third-person "-s" rule, e.g., <em>he must</em> instead of <em>he musts</em>) and phonological precision.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_logrado" value="3" onchange="calculateGrade()" data-feedback="You demonstrated complete morphological awareness of modal invariability, successfully avoiding the overgeneralization of the third-person '-s' rule (correctly using forms like he must). Furthermore, your phonological control of modals was clear and precise.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_logrado">
+                                    <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Achieved</span>
+                                        <span class="text-xs text-gray-500">No overgeneralization & strong phonetics</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_proceso" value="2" onchange="calculateGrade()" data-feedback="You used modal verbs reasonably well, though you occasionally slipped into overgeneralization by applying the third-person '-s' rule to a modal. Refine both this morphological aspect and your phonological clarity.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_proceso">
+                                    <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">In Progress</span>
+                                        <span class="text-xs text-gray-500">Occasional '-s' slips</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia_modales" id="mm_mejora" value="1" onchange="calculateGrade()" data-feedback="It is necessary to work on modal invariability; remember that modals never take a third-person '-s' (avoiding overgeneralization like he musts). Practice their morphological structure and phonological pronunciation.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="mm_mejora">
+                                    <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Needs Improvement</span>
+                                        <span class="text-xs text-gray-500">Frequent overgeneralization</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-gray-200">
                     <label for="teacherComment" class="block text-sm font-medium text-gray-700 mb-2">General Comment (Optional but recommended)</label>
-                    <textarea id="teacherComment" rows="4" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors" placeholder="Write specific observations about their participation in the assembly, presented arguments, or recommendations for improvement..."></textarea>
+                    <textarea id="teacherComment" rows="4" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors" placeholder="Write specific observations about their participation in the assembly, arguments presented, or recommendations for improvement..."></textarea>
                 </div>
                 
                 <div class="mt-6 flex justify-end">
@@ -252,9 +290,9 @@
     </main>
 
     <script>
-        // Function to automatically calculate the grade based on the 1-3 scale converted to 0.0 - 5.0
+        // Function to automatically calculate the grade based on the 1-3 scale converted to 0.0 - 5.0 (4 criteria)
         function calculateGrade() {
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let totalScore = 0;
             let answeredCount = 0;
 
@@ -269,7 +307,7 @@
             const gradeDisplay = document.getElementById('autoGradeDisplay');
             if (answeredCount > 0) {
                 const average = totalScore / answeredCount; // Average between 1 and 3
-                // Converts scale 1-3 to quantitative grade 1.0 to 5.0
+                // Converts the 1-3 scale to a quantitative grade from 1.0 to 5.0
                 const calculatedGrade = 1.0 + ((average - 1) / 2) * 4.0;
                 gradeDisplay.textContent = calculatedGrade.toFixed(1);
             } else {
@@ -297,7 +335,7 @@
                 return;
             }
 
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let allAnswered = true;
             let feedbackPoints = [];
             let totalScore = 0;
@@ -313,7 +351,7 @@
             });
             
             if (!allAnswered) {
-                 showToast("Please evaluate all criteria on the rating scale.", "warning");
+                 showToast("Please evaluate all rubric criteria.", "warning");
                  return;
             }
 
@@ -330,11 +368,11 @@
             });
 
             if (calculatedGrade >= 4.0) {
-                feedbackText += `Excellent performance! You demonstrated a solid command of modals and a great argumentative capacity oriented toward peaceful coexistence.\n\n`;
+                feedbackText += `Outstanding performance! You demonstrated a solid command of modal verbs, their morphological invariability, and great argumentative capacity oriented toward peaceful coexistence.\n\n`;
             } else if (calculatedGrade >= 3.0) {
-                feedbackText += `You are on a very good path. Continue strengthening your use of grammatical structures and active participation in school debates.\n\n`;
+                feedbackText += `You are on a very good path. Continue strengthening the use of grammatical structures, avoiding overgeneralization, and improving your active participation in school debates.\n\n`;
             } else {
-                feedbackText += `We are in a formative learning process. I encourage you to review modals and commit more to group argumentation dynamics.\n\n`;
+                feedbackText += `We are in a formative learning process. I encourage you to review modal verbs and morphological structure to engage more deeply with group argumentation dynamics.\n\n`;
             }
 
             if (teacherComment.trim() !== "") {
@@ -388,7 +426,7 @@
             }
 
             // Calculate current grade for email
-            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play', 'morfologia_modales'];
             let totalScore = 0;
             criteriaNames.forEach(name => {
                 const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
