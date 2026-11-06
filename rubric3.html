@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvaluaTIC - Intercultural Podcast (Unit 3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init({
+            publicKey: "xjz-L3LVVkaKYeBJO",
+          });
+       })();
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .rubric-radio:checked + label {
+            background-color: #f3e8ff;
+            border-color: #7e22ce;
+            color: #581c87;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        .rubric-radio:checked + label .status-icon {
+            color: #7e22ce;
+            opacity: 1;
+        }
+        .rubric-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .status-icon {
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-purple-700 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-podcast text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight">EvaluaTIC - Unit 3</span>
+                </div>
+                <div class="text-sm font-medium text-purple-100 flex flex-col items-end">
+                    <span>I.E. Gran Colombia</span>
+                    <span class="text-xs opacity-75">Grade 9-E | Intercultural Podcast</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-6">
+        
+        <!-- Left Column: Student Info & Rubric -->
+        <div class="w-full md:w-2/3 flex flex-col gap-6">
+            
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-purple-600"></i>Student Information & Automatic Grade</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <!-- Student Name -->
+                    <div class="md:col-span-1">
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Student Name</label>
+                        <input type="text" id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors bg-gray-50" placeholder="e.g., John Smith">
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="md:col-span-1">
+                        <label for="studentEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="studentEmail" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors bg-gray-50" placeholder="student@email.com">
+                    </div>
+
+                    <!-- Automatic Calculated Grade -->
+                    <div class="md:col-span-1 bg-purple-50 border border-purple-200 rounded-lg p-3 text-center flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-purple-700 uppercase tracking-wider">Automatic Grade (0.0 - 5.0)</span>
+                        <span id="autoGradeDisplay" class="text-2xl font-bold text-purple-900 mt-1">0.0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-grow">
+                <div class="flex flex-col mb-6 border-b pb-4">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-microphone-alt mr-2 text-purple-600"></i>Quantitative Analytical Rubric (Oral Production)</h2>
+                    <p class="text-sm text-gray-500 mt-1">Activity: Intercultural Podcast (Unit 3)</p>
+                </div>
+                
+                <div id="rubricContainer" class="space-y-8">
+                    
+                    <!-- Criterion 1: Fluency and Intelligibility (Phonology) -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-wave-square text-purple-600 mr-2"></i>1. Fluency and Intelligibility (Phonology)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Evaluates appropriate pace, natural pauses, intonation, and message clarity.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <!-- 5 – Excellent -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_5" value="5" onchange="calculateGrade()" data-feedback="5 – Excellent: Speaks with an appropriate pace, natural pauses, and intonation that facilitates total understanding of the message.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="fl_5">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">5 – Excellent</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Speaks with an appropriate pace, natural pauses, and intonation that facilitates total understanding.</span>
+                                </label>
+                            </div>
+                            <!-- 4 – Good -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_4" value="4" onchange="calculateGrade()" data-feedback="4 – Good: Good fluency and clear intonation with minimal occasional details that do not affect global communication.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="fl_4">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">4 – Good</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Shows good command of rhythm and general intonation with slight occasional hesitations.</span>
+                                </label>
+                            </div>
+                            <!-- 3 - Average -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_3" value="3" onchange="calculateGrade()" data-feedback="3 – Average: Production is understandable, although it presents some interference from L1 syllabic rhythm or occasional doubts.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="fl_3">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">3 – Average</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Production is understandable, although it presents some interference from L1 syllabic rhythm or occasional doubts.</span>
+                                </label>
+                            </div>
+                            <!-- 2 – Basic -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_2" value="2" onchange="calculateGrade()" data-feedback="2 – Basic: Frequent pauses and marked L1 influence that partially hinder initial message fluency.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="fl_2">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">2 – Basic</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Presents recurrent pauses and marked L1 influence that require greater attention.</span>
+                                </label>
+                            </div>
+                            <!-- 1 – Poor -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="fluidez" id="fl_1" value="1" onchange="calculateGrade()" data-feedback="1 – Poor: Prolonged pauses and frequent phonetic errors significantly hinder message comprehension.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="fl_1">
+                                    <span class="font-bold text-xs text-rose-900 bg-rose-100 py-1 px-2 rounded mb-2">1 – Poor</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Prolonged pauses and frequent phonetic errors significantly hinder message comprehension.</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criterion 2: Intercultural Awareness -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-globe-americas text-purple-600 mr-2"></i>2. Intercultural Awareness</h3>
+                        <p class="text-sm text-gray-600 mb-4">Contrasts characteristics of Buga's local culture with global dynamics, expressing respectful judgments.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <!-- 5 – Excellent -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_5" value="5" onchange="calculateGrade()" data-feedback="5 – Excellent: Accurately contrasts characteristics of Buga's local culture with global dynamics, issuing respectful judgments.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="ci_5">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">5 – Excellent</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Accurately contrasts characteristics of Buga's local culture with global dynamics, issuing respectful judgments.</span>
+                                </label>
+                            </div>
+                            <!-- 4 – Good -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_4" value="4" onchange="calculateGrade()" data-feedback="4 – Good: Relates local and global elements clearly and respectfully with good cultural arguments.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="ci_4">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">4 – Good</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Properly connects Buga's cultural traits with global contexts through relevant reflections.</span>
+                                </label>
+                            </div>
+                            <!-- 3 - Average -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_3" value="3" onchange="calculateGrade()" data-feedback="3 – Average: Mentions aspects of their culture and others, but the connection or comparison is superficial.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="ci_3">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">3 – Average</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Mentions aspects of their culture and others, but the connection or comparison is superficial.</span>
+                                </label>
+                            </div>
+                            <!-- 2 – Basic -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_2" value="2" onchange="calculateGrade()" data-feedback="2 – Basic: Mentions isolated cultural traits without managing to articulate a coherent comparison.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="ci_2">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">2 – Basic</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Names cultural elements in an isolated way without delving into their intercultural meaning.</span>
+                                </label>
+                            </div>
+                            <!-- 1 – Poor -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="intercultural" id="ci_1" value="1" onchange="calculateGrade()" data-feedback="1 – Poor: Fails to identify or articulate local cultural characteristics versus foreign ones.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="ci_1">
+                                    <span class="font-bold text-xs text-rose-900 bg-rose-100 py-1 px-2 rounded mb-2">1 – Poor</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Fails to identify or articulate local cultural characteristics versus foreign ones.</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criterion 3: Linguistic Integration (Grammar and Lexicon) -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-1 text-base"><i class="fas fa-book-reader text-purple-600 mr-2"></i>3. Linguistic Integration (Grammar and Lexicon)</h3>
+                        <p class="text-sm text-gray-600 mb-4">Integrates expressions for giving opinions (U3), rules (U2), and empathy vocabulary (U1).</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                            <!-- 5 – Excellent -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_5" value="5" onchange="calculateGrade()" data-feedback="5 – Excellent: Fluently integrates expressions for giving opinions (U3), rules (U2), and empathy vocabulary (U1).">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="il_5">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">5 – Excellent</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Fluently integrates expressions for giving opinions (U3), rules (U2), and empathy vocabulary (U1).</span>
+                                </label>
+                            </div>
+                            <!-- 4 – Good -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_4" value="4" onchange="calculateGrade()" data-feedback="4 – Good: Correctly uses key unit structures with high effectiveness and correction.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="il_4">
+                                    <span class="font-bold text-xs text-purple-900 bg-purple-100 py-1 px-2 rounded mb-2">4 – Good</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Properly applies required expressions and vocabulary while maintaining general correctness.</span>
+                                </label>
+                            </div>
+                            <!-- 3 - Average -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_3" value="3" onchange="calculateGrade()" data-feedback="3 – Average: Uses key structures, but application is mechanical or presents grammatical errors that do not seriously alter the meaning.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="il_3">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">3 – Average</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Uses key structures, but application is mechanical or presents grammatical errors that do not seriously alter the meaning.</span>
+                                </label>
+                            </div>
+                            <!-- 2 – Basic -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_2" value="2" onchange="calculateGrade()" data-feedback="2 – Basic: Uses few unit structures with frequent errors that partially affect the message.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="il_2">
+                                    <span class="font-bold text-xs text-amber-900 bg-amber-100 py-1 px-2 rounded mb-2">2 – Basic</span>
+                                    <span class="text-xs text-gray-600 leading-tight">Incorporates elements from the units in a limited way with recurrent grammatical errors.</span>
+                                </label>
+                            </div>
+                            <!-- 1 – Poor -->
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="integracion" id="il_1" value="1" onchange="calculateGrade()" data-feedback="1 – Poor: The use of the studied structures is very sparse and vocabulary does not correspond to the thematic axes addressed.">
+                                <label class="rubric-label flex flex-col p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full text-center" for="il_1">
+                                    <span class="font-bold text-xs text-rose-900 bg-rose-100 py-1 px-2 rounded mb-2">1 – Poor</span>
+                                    <span class="text-xs text-gray-600 leading-tight">The use of the studied structures is very sparse and vocabulary does not correspond to the thematic axes addressed.</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <label for="teacherComment" class="block text-sm font-medium text-gray-700 mb-2">General Comment (Optional but recommended)</label>
+                    <textarea id="teacherComment" rows="4" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors" placeholder="Write specific observations about podcast delivery, tone of voice, confidence, or recommendations for improvement..."></textarea>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="generateFeedback()" class="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all flex items-center space-x-2 transform hover:scale-105">
+                        <i class="fas fa-magic"></i>
+                        <span>Generate Automatic Feedback</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right Column: Preview & Actions Panel -->
+        <div class="w-full md:w-1/3 flex flex-col">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-8 flex-grow h-fit">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-comment-dots mr-2 text-purple-600"></i>Generated Feedback</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="sendEmail()" id="emailBtn" class="text-purple-700 hover:text-purple-800 transition-colors hidden px-2 py-1 rounded hover:bg-purple-50" title="Send via email">
+                            <i class="fas fa-paper-plane mr-1"></i> <span class="text-sm font-medium">Send</span>
+                        </button>
+                        <button onclick="copyFeedback()" id="copyBtn" class="text-gray-400 hover:text-purple-700 transition-colors hidden px-2 py-1 rounded hover:bg-purple-50" title="Copy to clipboard">
+                            <i class="fas fa-copy mr-1"></i> <span class="text-sm font-medium">Copy</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
+                    <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
+                        <i class="fas fa-file-signature text-4xl mb-3"></i>
+                        <p>Enter the student's name and email, evaluate the criteria, and click "Generate Feedback" to see the result here.</p>
+                    </div>
+                </div>
+                
+                <!-- Toast Notification -->
+                <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-3 rounded shadow-xl transform transition-transform duration-300 translate-y-24 opacity-0 flex items-center gap-3 z-50">
+                    <i class="fas fa-check-circle text-purple-400 text-xl"></i>
+                    <span id="toastMessage" class="font-medium">Copied to clipboard</span>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        // Function to automatically calculate the grade based on the average of selected criteria
+        function calculateGrade() {
+            const criteriaNames = ['fluidez', 'intercultural', 'integracion'];
+            let totalScore = 0;
+            let answeredCount = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    totalScore += parseInt(selectedRadio.value);
+                    answeredCount++;
+                }
+            });
+
+            const gradeDisplay = document.getElementById('autoGradeDisplay');
+            if (answeredCount > 0) {
+                const averageGrade = totalScore / answeredCount;
+                gradeDisplay.textContent = averageGrade.toFixed(1);
+            } else {
+                gradeDisplay.textContent = "0.0";
+            }
+        }
+
+        function generateFeedback() {
+            const studentNameInput = document.getElementById('studentName');
+            const studentEmailInput = document.getElementById('studentEmail');
+            
+            const studentName = studentNameInput.value.trim();
+            const studentEmail = studentEmailInput.value.trim();
+            const teacherComment = document.getElementById('teacherComment').value;
+            
+            if (!studentName) {
+                showToast("Please enter the student's name.", "error");
+                studentNameInput.focus();
+                return;
+            }
+
+            if (!studentEmail || !studentEmail.includes('@')) {
+                showToast("Please enter a valid email address.", "error");
+                studentEmailInput.focus();
+                return;
+            }
+
+            const criteriaNames = ['fluidez', 'intercultural', 'integracion'];
+            let allAnswered = true;
+            let feedbackPoints = [];
+            let totalScore = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    feedbackPoints.push(selectedRadio.getAttribute('data-feedback'));
+                    totalScore += parseInt(selectedRadio.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                 showToast("Please evaluate all rubric criteria.", "warning");
+                 return;
+            }
+
+            const calculatedGrade = (totalScore / criteriaNames.length).toFixed(1);
+            const firstName = studentName.split(' ')[0];
+
+            let feedbackText = `Hello ${firstName},\n\n`;
+            feedbackText += `Quantitative grade: ${calculatedGrade} / 5.0 (Assessment Completed)\n\n`;
+            feedbackText += `Below is the analytical feedback for your participation in the "Intercultural Podcast" activity (Unit 3):\n\n`;
+            
+            feedbackPoints.forEach(point => {
+                feedbackText += `• ${point}\n\n`;
+            });
+
+            if (calculatedGrade >= 4.0) {
+                feedbackText += `Excellent work on your podcast! You demonstrated outstanding phonetic command, acute intercultural awareness, and flawless linguistic integration.\n\n`;
+            } else if (calculatedGrade >= 3.0) {
+                feedbackText += `You are on a very good path with your oral production. Continue practicing your fluency and deepening cultural comparisons to keep growing.\n\n`;
+            } else {
+                feedbackText += `We are in a formative learning process. I encourage you to review the contents and practice your delivery more frequently to improve in future recordings.\n\n`;
+            }
+
+            if (teacherComment.trim() !== "") {
+                feedbackText += `Teacher's observation:\n"${teacherComment.trim()}"\n\n`;
+            }
+
+            feedbackText += `Sincerely,\nYour English Teacher`;
+
+            const resultDiv = document.getElementById('feedbackResult');
+            resultDiv.innerHTML = `<div class="font-sans text-gray-800 whitespace-pre-wrap">${feedbackText}</div>`;
+            
+            document.getElementById('copyBtn').classList.remove('hidden');
+            document.getElementById('emailBtn').classList.remove('hidden');
+            
+            if(window.innerWidth < 768) {
+                document.getElementById('feedbackResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function copyFeedback() {
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+            if(!textToCopy || textToCopy.includes("Enter the student")) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Feedback copied to clipboard", "success");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Feedback copied to clipboard", "success");
+                } catch (err) {
+                    showToast("Error copying", "error");
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function sendEmail() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentEmail = document.getElementById('studentEmail').value.trim();
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+            const teacherComment = document.getElementById('teacherComment').value;
+
+            if (!studentName || !studentEmail || !textToCopy || textToCopy.includes("Enter the student")) {
+                showToast("Please generate the feedback and verify data before sending.", "error");
+                return;
+            }
+
+            // Calculate current grade for email
+            const criteriaNames = ['fluidez', 'intercultural', 'integracion'];
+            let totalScore = 0;
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) totalScore += parseInt(selectedRadio.value);
+            });
+            const calculatedGrade = (totalScore / criteriaNames.length).toFixed(1);
+
+            const templateParams = {
+                to_name: studentName,
+                nombre: studentName,
+                to_email: studentEmail,
+                curso: "Unit 3: Intercultural Podcast (Grade 9-E)",
+                message: textToCopy,
+                feedback: textToCopy,
+                comentario: teacherComment.trim() || "No additional comments",
+                nota: `${calculatedGrade} / 5.0 (Assessment Completed)`
+            };
+
+            showToast("Sending email to student...", "success");
+
+            emailjs.send('service_468ziai', 'template_6g295jb', templateParams)
+                .then(function(response) {
+                    showToast(`Email successfully sent to ${studentName}!`, "success");
+                }, function(error) {
+                    console.error('Error EmailJS:', error);
+                    showToast("There was an error sending the email.", "error");
+                });
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            msgEl.textContent = message;
+            
+            if (type === "error" || type === "warning") {
+                icon.className = "fas fa-exclamation-triangle text-amber-400 text-xl";
+            } else {
+                icon.className = "fas fa-check-circle text-purple-400 text-xl";
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
