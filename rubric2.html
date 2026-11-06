@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvaluaTIC - School Rules Assembly (Unit 2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init({
+            publicKey: "xjz-L3LVVkaKYeBJO",
+          });
+       })();
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .rubric-radio:checked + label {
+            background-color: #ccfbf1;
+            border-color: #0d9488;
+            color: #115e59;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        .rubric-radio:checked + label .status-icon {
+            color: #0d9488;
+            opacity: 1;
+        }
+        .rubric-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .status-icon {
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-teal-700 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-balance-scale text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight">EvaluaTIC - Unit 2</span>
+                </div>
+                <div class="text-sm font-medium text-teal-100 flex flex-col items-end">
+                    <span>I.E. Gran Colombia</span>
+                    <span class="text-xs opacity-75">Grade 9-E | School Rules Assembly</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-6">
+        
+        <!-- Left Column: Student Info & Rubric -->
+        <div class="w-full md:w-2/3 flex flex-col gap-6">
+            
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-user-edit mr-2 text-teal-600"></i>Student Information & Automatic Grade</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <!-- Student Name -->
+                    <div class="md:col-span-1">
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-2">Student Name</label>
+                        <input type="text" id="studentName" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors bg-gray-50" placeholder="e.g., John Smith">
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="md:col-span-1">
+                        <label for="studentEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="studentEmail" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors bg-gray-50" placeholder="student@email.com">
+                    </div>
+
+                    <!-- Automatic Calculated Grade -->
+                    <div class="md:col-span-1 bg-teal-50 border border-teal-200 rounded-lg p-3 text-center flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-teal-700 uppercase tracking-wider">Automatic Grade (0.0 - 5.0)</span>
+                        <span id="autoGradeDisplay" class="text-2xl font-bold text-teal-900 mt-1">0.0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex-grow">
+                <div class="flex flex-col mb-6 border-b pb-4">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-tasks mr-2 text-teal-600"></i>Argumentation Rating Scale</h2>
+                    <p class="text-sm text-gray-500 mt-1">Activity: School Rules Assembly (Unit 2)</p>
+                </div>
+                
+                <div id="rubricContainer" class="space-y-6">
+                    <!-- Criterion 1: Modal Verbs -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-2">1. Use of Modal Verbs</h3>
+                        <p class="text-sm text-gray-600 mb-4">Correctly applies <span class="font-semibold text-teal-700">must/mustn't, should, can</span> according to communicative intent (obligation, advice, permission).</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_logrado" value="3" onchange="calculateGrade()" data-feedback="You correctly applied modal verbs (must/mustn't, should, can), demonstrating a precise command of communicative intent (obligation, advice, and permission).">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_logrado">
+                                    <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Achieved</span>
+                                        <span class="text-xs text-gray-500">Precise command of modals</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_proceso" value="2" onchange="calculateGrade()" data-feedback="You used some modal verbs, but you still need to review their proper application according to the intent of obligation or advice.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_proceso">
+                                    <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">In Progress</span>
+                                        <span class="text-xs text-gray-500">Partial or mechanical use</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="verbos_modales" id="vm_mejora" value="1" onchange="calculateGrade()" data-feedback="It is necessary for you to reinforce the use of modal verbs (must, should, can) to adequately express rules and obligations.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="vm_mejora">
+                                    <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Needs Improvement</span>
+                                        <span class="text-xs text-gray-500">Requires significant support</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criterion 2: Moral Judgment and Citizenship -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-2">2. Moral Judgment and Citizenship</h3>
+                        <p class="text-sm text-gray-600 mb-4">The proposed rules respond to ethical analysis and promote respect and harmonious coexistence.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_logrado" value="3" onchange="calculateGrade()" data-feedback="Your proposals reflected an excellent ethical analysis, always prioritizing respect and harmonious coexistence in the school community.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_logrado">
+                                    <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Achieved</span>
+                                        <span class="text-xs text-gray-500">Excellent ethical analysis</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_proceso" value="2" onchange="calculateGrade()" data-feedback="The proposed rules show an effort to improve coexistence, although you can delve deeper into ethical analysis and mutual respect.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_proceso">
+                                    <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">In Progress</span>
+                                        <span class="text-xs text-gray-500">Superficial analysis</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="juicio_moral" id="jm_mejora" value="1" onchange="calculateGrade()" data-feedback="I invite you to reflect more on how your rule proposals can foster respect and harmonious group coexistence.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="jm_mejora">
+                                    <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Needs Improvement</span>
+                                        <span class="text-xs text-gray-500">Little focus on coexistence</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criterion 3: Role-Play Performance -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h3 class="font-medium text-gray-800 mb-2">3. Role-Play Performance</h3>
+                        <p class="text-sm text-gray-600 mb-4">Maintains assigned role and interacts fluently with peers while arguing their position.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_logrado" value="3" onchange="calculateGrade()" data-feedback="You maintained your assigned role with great naturalness and interacted fluently with your peers, arguing your position solidly.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_logrado">
+                                    <i class="fas fa-check-circle mr-2 status-icon text-teal-600"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Achieved</span>
+                                        <span class="text-xs text-gray-500">Fluency and solidity in role</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_proceso" value="2" onchange="calculateGrade()" data-feedback="You participated in the role-play maintaining your role, but you can work on achieving greater fluency and interaction with your classmates when arguing.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_proceso">
+                                    <i class="fas fa-clock mr-2 status-icon text-amber-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">In Progress</span>
+                                        <span class="text-xs text-gray-500">Limited interaction</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="role_play" id="rp_mejora" value="1" onchange="calculateGrade()" data-feedback="It is important to take on the assigned role with greater commitment and participate actively in the argumentation alongside your peers.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50 h-full" for="rp_mejora">
+                                    <i class="fas fa-exclamation-circle mr-2 status-icon text-rose-500"></i>
+                                    <div>
+                                        <span class="font-semibold text-sm block">Needs Improvement</span>
+                                        <span class="text-xs text-gray-500">Difficulty maintaining role</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <label for="teacherComment" class="block text-sm font-medium text-gray-700 mb-2">General Comment (Optional but recommended)</label>
+                    <textarea id="teacherComment" rows="4" class="w-full rounded-lg border-gray-300 border p-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors" placeholder="Write specific observations about their participation in the assembly, presented arguments, or recommendations for improvement..."></textarea>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="generateFeedback()" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all flex items-center space-x-2 transform hover:scale-105">
+                        <i class="fas fa-magic"></i>
+                        <span>Generate Automatic Feedback</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right Column: Preview & Actions Panel -->
+        <div class="w-full md:w-1/3 flex flex-col">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-8 flex-grow h-fit">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-comment-dots mr-2 text-teal-600"></i>Generated Feedback</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="sendEmail()" id="emailBtn" class="text-teal-700 hover:text-teal-800 transition-colors hidden px-2 py-1 rounded hover:bg-teal-50" title="Send via email">
+                            <i class="fas fa-paper-plane mr-1"></i> <span class="text-sm font-medium">Send</span>
+                        </button>
+                        <button onclick="copyFeedback()" id="copyBtn" class="text-gray-400 hover:text-teal-700 transition-colors hidden px-2 py-1 rounded hover:bg-teal-50" title="Copy to clipboard">
+                            <i class="fas fa-copy mr-1"></i> <span class="text-sm font-medium">Copy</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="feedbackResult" class="bg-gray-50 rounded-lg p-5 border border-gray-200 min-h-[400px] text-gray-600 whitespace-pre-wrap text-sm leading-relaxed font-sans shadow-inner">
+                    <div class="flex flex-col items-center justify-center h-full opacity-50 text-center">
+                        <i class="fas fa-file-signature text-4xl mb-3"></i>
+                        <p>Enter the student's name and email, evaluate the criteria, and click "Generate Feedback" to see the result here.</p>
+                    </div>
+                </div>
+                
+                <!-- Toast Notification -->
+                <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-3 rounded shadow-xl transform transition-transform duration-300 translate-y-24 opacity-0 flex items-center gap-3 z-50">
+                    <i class="fas fa-check-circle text-teal-400 text-xl"></i>
+                    <span id="toastMessage" class="font-medium">Copied to clipboard</span>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        // Function to automatically calculate the grade based on the 1-3 scale converted to 0.0 - 5.0
+        function calculateGrade() {
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            let totalScore = 0;
+            let answeredCount = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    totalScore += parseInt(selectedRadio.value);
+                    answeredCount++;
+                }
+            });
+
+            const gradeDisplay = document.getElementById('autoGradeDisplay');
+            if (answeredCount > 0) {
+                const average = totalScore / answeredCount; // Average between 1 and 3
+                // Converts scale 1-3 to quantitative grade 1.0 to 5.0
+                const calculatedGrade = 1.0 + ((average - 1) / 2) * 4.0;
+                gradeDisplay.textContent = calculatedGrade.toFixed(1);
+            } else {
+                gradeDisplay.textContent = "0.0";
+            }
+        }
+
+        function generateFeedback() {
+            const studentNameInput = document.getElementById('studentName');
+            const studentEmailInput = document.getElementById('studentEmail');
+            
+            const studentName = studentNameInput.value.trim();
+            const studentEmail = studentEmailInput.value.trim();
+            const teacherComment = document.getElementById('teacherComment').value;
+            
+            if (!studentName) {
+                showToast("Please enter the student's name.", "error");
+                studentNameInput.focus();
+                return;
+            }
+
+            if (!studentEmail || !studentEmail.includes('@')) {
+                showToast("Please enter a valid email address.", "error");
+                studentEmailInput.focus();
+                return;
+            }
+
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            let allAnswered = true;
+            let feedbackPoints = [];
+            let totalScore = 0;
+
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) {
+                    feedbackPoints.push(selectedRadio.getAttribute('data-feedback'));
+                    totalScore += parseInt(selectedRadio.value);
+                } else {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                 showToast("Please evaluate all criteria on the rating scale.", "warning");
+                 return;
+            }
+
+            const average = totalScore / criteriaNames.length;
+            const calculatedGrade = (1.0 + ((average - 1) / 2) * 4.0).toFixed(1);
+            const firstName = studentName.split(' ')[0];
+
+            let feedbackText = `Hello ${firstName},\n\n`;
+            feedbackText += `Quantitative grade: ${calculatedGrade} / 5.0 (Formative evaluation completed)\n\n`;
+            feedbackText += `Below is the formative feedback for your participation in the "School Rules Assembly" activity (Unit 2):\n\n`;
+            
+            feedbackPoints.forEach(point => {
+                feedbackText += `• ${point}\n\n`;
+            });
+
+            if (calculatedGrade >= 4.0) {
+                feedbackText += `Excellent performance! You demonstrated a solid command of modals and a great argumentative capacity oriented toward peaceful coexistence.\n\n`;
+            } else if (calculatedGrade >= 3.0) {
+                feedbackText += `You are on a very good path. Continue strengthening your use of grammatical structures and active participation in school debates.\n\n`;
+            } else {
+                feedbackText += `We are in a formative learning process. I encourage you to review modals and commit more to group argumentation dynamics.\n\n`;
+            }
+
+            if (teacherComment.trim() !== "") {
+                feedbackText += `Teacher's observation:\n"${teacherComment.trim()}"\n\n`;
+            }
+
+            feedbackText += `Sincerely,\nYour English Teacher`;
+
+            const resultDiv = document.getElementById('feedbackResult');
+            resultDiv.innerHTML = `<div class="font-sans text-gray-800 whitespace-pre-wrap">${feedbackText}</div>`;
+            
+            document.getElementById('copyBtn').classList.remove('hidden');
+            document.getElementById('emailBtn').classList.remove('hidden');
+            
+            if(window.innerWidth < 768) {
+                document.getElementById('feedbackResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function copyFeedback() {
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+            if(!textToCopy || textToCopy.includes("Enter the student")) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Feedback copied to clipboard", "success");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Feedback copied to clipboard", "success");
+                } catch (err) {
+                    showToast("Error copying", "error");
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function sendEmail() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentEmail = document.getElementById('studentEmail').value.trim();
+            const textToCopy = document.getElementById('feedbackResult').innerText;
+            const teacherComment = document.getElementById('teacherComment').value;
+
+            if (!studentName || !studentEmail || !textToCopy || textToCopy.includes("Enter the student")) {
+                showToast("Please generate the feedback and verify data before sending.", "error");
+                return;
+            }
+
+            // Calculate current grade for email
+            const criteriaNames = ['verbos_modales', 'juicio_moral', 'role_play'];
+            let totalScore = 0;
+            criteriaNames.forEach(name => {
+                const selectedRadio = document.querySelector(`input[name="${name}"]:checked`);
+                if (selectedRadio) totalScore += parseInt(selectedRadio.value);
+            });
+            const average = totalScore / criteriaNames.length;
+            const calculatedGrade = (1.0 + ((average - 1) / 2) * 4.0).toFixed(1);
+
+            const templateParams = {
+                to_name: studentName,
+                nombre: studentName,
+                to_email: studentEmail,
+                curso: "Unit 2: School Rules Assembly (Grade 9-E)",
+                message: textToCopy,
+                feedback: textToCopy,
+                comentario: teacherComment.trim() || "No additional comments",
+                nota: `${calculatedGrade} / 5.0 (Formative evaluation completed)`
+            };
+
+            showToast("Sending email to student...", "success");
+
+            emailjs.send('service_468ziai', 'template_6g295jb', templateParams)
+                .then(function(response) {
+                    showToast(`Email successfully sent to ${studentName}!`, "success");
+                }, function(error) {
+                    console.error('Error EmailJS:', error);
+                    showToast("There was an error sending the email.", "error");
+                });
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            msgEl.textContent = message;
+            
+            if (type === "error" || type === "warning") {
+                icon.className = "fas fa-exclamation-triangle text-amber-400 text-xl";
+            } else {
+                icon.className = "fas fa-check-circle text-teal-400 text-xl";
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
