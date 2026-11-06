@@ -62,7 +62,7 @@
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-user-edit mr-2 text-indigo-500"></i>Información del Estudiante y Calificación</h2>
                     <span id="gradeBadge" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">
-                        Cálculo automático: 0/4 (1.0)
+                        Cálculo automático: 0/5 (1.0)
                     </span>
                 </div>
                 
@@ -191,6 +191,30 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Criterio 5: Conciencia Morfológica (Nuevo) -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <div class="mb-2">
+                            <h3 class="font-medium text-gray-800">5. Conciencia Morfológica (Morfemas Derivacionales)</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">Identifica y aplica correctamente morfemas derivacionales para formar adjetivos a partir de bases léxicas (ej. <em>respect → respectful; empathy → empathetic</em>).</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia" id="morfologia_yes" value="yes" data-feedback="Demostraste un excelente dominio de la morfología derivacional, transformando con precisión bases léxicas en adjetivos funcionales (ej. respect → respectful; empathy → empathetic) para enriquecer tu vocabulario.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="morfologia_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Logrado)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia" id="morfologia_no" value="no" data-feedback="Te sugiero repasar el uso de sufijos derivacionales (como -ful o -tic) para transformar sustantivos y verbos en adjetivos correctamente (ej. respect → respectful; empathy → empathetic).">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="morfologia_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (En Proceso)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-gray-200">
@@ -239,9 +263,9 @@
     </main>
 
     <script>
-        const criteriaNames = ['comp_dilema', 'uso_expresiones', 'empatia', 'solucion'];
+        const criteriaNames = ['comp_dilema', 'uso_expresiones', 'empatia', 'solucion', 'morfologia'];
 
-        // Función para calcular la nota automáticamente en base a la regla de tres lineal
+        // Función para calcular la nota automáticamente en base a la regla de tres lineal (sobre 5 criterios)
         function updateCalculatedGrade() {
             let yesCount = 0;
             criteriaNames.forEach(name => {
@@ -251,14 +275,14 @@
                 }
             });
 
-            // Fórmula: (Puntos obtenidos / 4) * 4.0 + 1.0
-            const calculatedGrade = ((yesCount / 4) * 4.0) + 1.0;
+            // Fórmula: (Puntos obtenidos / 5) * 4.0 + 1.0
+            const calculatedGrade = ((yesCount / 5) * 4.0) + 1.0;
             
             const gradeInput = document.getElementById('studentGrade');
             gradeInput.value = calculatedGrade.toFixed(1);
 
             const badge = document.getElementById('gradeBadge');
-            badge.textContent = `Cálculo automático: ${yesCount}/4 (${calculatedGrade.toFixed(1)})`;
+            badge.textContent = `Cálculo automático: ${yesCount}/5 (${calculatedGrade.toFixed(1)})`;
         }
 
         // Escuchar cambios en los radio buttons para recalcular en tiempo real
@@ -321,17 +345,17 @@
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hola ${firstName},\n\n`;
-            feedbackText += `Calificación: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (${yesCount} de 4 criterios logrados - Evaluación Formativa)\n\n`;
+            feedbackText += `Calificación: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (${yesCount} de 5 criterios logrados - Assessment Completed)\n\n`;
             feedbackText += `A continuación te presento la retroalimentación formativa de tu participación en la actividad "The Classroom Mailbox" (Análisis de Dilemas Sociales):\n\n`;
             
             feedbackPoints.forEach(point => {
                 feedbackText += `• ${point}\n\n`;
             });
 
-            if (yesCount === 4) {
-                feedbackText += `¡Excelente trabajo! Has demostrado una gran capacidad para analizar situaciones sociales complejas y usar el inglés como una herramienta de acción social empática.\n\n`;
-            } else if (yesCount >= 2) {
-                feedbackText += `Vas por muy buen camino. Sigue participando activamente y verás cómo tu confianza y tus habilidades en inglés continúan mejorando.\n\n`;
+            if (yesCount === 5) {
+                feedbackText += `¡Excelente trabajo! Has demostrado una gran capacidad para analizar situaciones sociales complejas, utilizar morfología derivacional y usar el inglés como una herramienta de acción social empática.\n\n`;
+            } else if (yesCount >= 3) {
+                feedbackText += `Vas por muy buen camino. Sigue participando activamente y verás cómo tu confianza y tus habilidades lingüísticas continúan mejorando.\n\n`;
             } else {
                 feedbackText += `Recuerda que estamos en un proceso de aprendizaje. Te invito a participar más en las próximas actividades; cuentas con todo mi apoyo para mejorar.\n\n`;
             }
@@ -395,7 +419,7 @@
                 message: textToCopy,
                 feedback: textToCopy,
                 comentario: teacherComment.trim() || "Sin comentarios adicionales",
-                nota: `${parseFloat(studentGrade).toFixed(1)} / 5.0 (Evaluación formativa completada)`
+                nota: `${parseFloat(studentGrade).toFixed(1)} / 5.0 (Assessment Completed)`
             };
 
             showToast("Enviando correo al estudiante...", "success");
