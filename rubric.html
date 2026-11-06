@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvaluaTIC - Checklist with Automatic Calculation</title>
+    <title>EvaluaTIC - Checklist with Automatic Calculation (Unit 1)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -62,7 +62,7 @@
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-lg font-semibold text-gray-700"><i class="fas fa-user-edit mr-2 text-indigo-500"></i>Student Information & Grade</h2>
                     <span id="gradeBadge" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">
-                        Automatic calculation: 0/4 (1.0)
+                        Automatic calculation: 0/5 (1.0)
                     </span>
                 </div>
                 
@@ -191,6 +191,30 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Criterion 5: Morphological Awareness -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <div class="mb-2">
+                            <h3 class="font-medium text-gray-800">5. Morphological Awareness (Derivational Morphemes)</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">Identifies and correctly applies derivational morphemes to form adjectives from lexical bases (e.g., <em>respect → respectful; empathy → empathetic</em>).</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia" id="morfologia_yes" value="yes" data-feedback="You demonstrated an excellent command of derivational morphology, precisely transforming lexical bases into functional adjectives (e.g., respect → respectful; empathy → empathetic) to enrich your vocabulary.">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="morfologia_yes">
+                                    <i class="fas fa-check-circle mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Yes (Achieved)</span>
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input class="sr-only rubric-radio" type="radio" name="morfologia" id="morfologia_no" value="no" data-feedback="I suggest reviewing the use of derivational suffixes (such as -ful or -tic) to correctly transform nouns and verbs into adjectives (e.g., respect → respectful; empathy → empathetic).">
+                                <label class="rubric-label flex items-center p-3 cursor-pointer rounded-lg border border-gray-300 bg-white hover:bg-gray-50" for="morfologia_no">
+                                    <i class="fas fa-clock mr-2 status-icon"></i>
+                                    <span class="font-semibold text-sm">Not Yet (In Progress)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-gray-200">
@@ -239,7 +263,7 @@
     </main>
 
     <script>
-        const criteriaNames = ['comp_dilema', 'uso_expresiones', 'empatia', 'solucion'];
+        const criteriaNames = ['comp_dilema', 'uso_expresiones', 'empatia', 'solucion', 'morfologia'];
 
         function updateCalculatedGrade() {
             let yesCount = 0;
@@ -250,13 +274,14 @@
                 }
             });
 
-            const calculatedGrade = ((yesCount / 4) * 4.0) + 1.0;
+            // Mathematical calculation based on 5 criteria
+            const calculatedGrade = ((yesCount / 5) * 4.0) + 1.0;
             
             const gradeInput = document.getElementById('studentGrade');
             gradeInput.value = calculatedGrade.toFixed(1);
 
             const badge = document.getElementById('gradeBadge');
-            badge.textContent = `Automatic calculation: ${yesCount}/4 (${calculatedGrade.toFixed(1)})`;
+            badge.textContent = `Automatic calculation: ${yesCount}/5 (${calculatedGrade.toFixed(1)})`;
         }
 
         document.querySelectorAll('.rubric-radio').forEach(radio => {
@@ -317,17 +342,17 @@
             const firstName = studentName.split(' ')[0];
 
             let feedbackText = `Hello ${firstName},\n\n`;
-            feedbackText += `Grade: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (${yesCount} of 4 criteria achieved - Assessment Completed)\n\n`;
+            feedbackText += `Grade: ${parseFloat(studentGrade).toFixed(1)} / 5.0 (${yesCount} of 5 criteria achieved - Assessment Completed)\n\n`;
             feedbackText += `Below is the formative feedback for your participation in the activity "The Classroom Mailbox" (Social Dilemmas Analysis):\n\n`;
             
             feedbackPoints.forEach(point => {
                 feedbackText += `• ${point}\n\n`;
             });
 
-            if (yesCount === 4) {
-                feedbackText += `Excellent work! You have demonstrated a great capacity to analyze complex social situations and use English as a tool for empathetic social action.\n\n`;
-            } else if (yesCount >= 2) {
-                feedbackText += `You are on a very good path. Keep participating actively and you will see how your confidence and English skills continue to improve.\n\n`;
+            if (yesCount === 5) {
+                feedbackText += `Excellent work! You have demonstrated a great capacity to analyze complex social situations, use derivational morphology, and apply English as a tool for empathetic social action.\n\n`;
+            } else if (yesCount >= 3) {
+                feedbackText += `You are on a very good path. Keep participating actively and you will see how your confidence and language skills continue to improve.\n\n`;
             } else {
                 feedbackText += `Remember that we are in a learning process. I invite you to participate more in upcoming activities; you have my full support to improve.\n\n`;
             }
