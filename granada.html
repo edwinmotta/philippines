@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Categorization Challenge</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'shake': 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both',
+                        'pulse-glow': 'pulseGlow 1.5s infinite alternate',
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-2px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(4px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-6px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(6px, 0, 0)' },
+                        },
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 10px rgba(99, 102, 241, 0.4)' },
+                            '100%': { boxShadow: '0 0 25px rgba(99, 102, 241, 0.9)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.8)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 0.8);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 1);
+        }
+        .touch-none {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased overflow-x-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4"></div>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex flex-col max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 gap-6">
+
+        <!-- Header Section -->
+        <header class="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400 font-bold text-xl">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-indigo-300">
+                            Profile Categorization Challenge
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+                            Drag each trait or experience card into its matching category drop zone.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats & Action Controls -->
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4 w-full md:w-auto justify-between md:justify-end">
+                <!-- Score Counter -->
+                <div class="bg-slate-800/90 border border-slate-700/70 rounded-xl px-4 py-2 flex items-center gap-3 shadow-inner">
+                    <i class="fa-solid fa-bullseye text-indigo-400 text-base"></i>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Matched</div>
+                        <div class="text-sm font-extrabold text-white" id="score-text">0 / 17</div>
+                    </div>
+                </div>
+
+                <!-- Timer Track -->
+                <div class="bg-slate-800/90 border border-slate-700/70 rounded-xl px-4 py-2 flex items-center gap-3 shadow-inner">
+                    <i class="fa-solid fa-stopwatch text-amber-400 text-base"></i>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Time</div>
+                        <div class="text-sm font-mono font-bold text-amber-300" id="timer-text">00:00</div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex items-center gap-2">
+                    <button id="sound-btn" title="Toggle Sound" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white transition-all shadow-md active:scale-95">
+                        <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                    </button>
+                    <button id="hint-btn" title="Highlight a match hint" class="px-3.5 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-md active:scale-95">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>Hint</span>
+                    </button>
+                    <button id="reset-btn" class="px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/30 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20 active:scale-95">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Global Progress Bar -->
+        <div class="w-full bg-slate-900/60 rounded-full h-2.5 p-0.5 border border-slate-800 overflow-hidden shadow-inner">
+            <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400 h-full rounded-full transition-all duration-500 ease-out w-0"></div>
+        </div>
+
+        <!-- Unsorted Cards Pool Container -->
+        <section class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-xl flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <h2 class="text-xs uppercase tracking-wider font-bold text-slate-300">
+                        Unsorted Cards Pool (<span id="pool-count">17</span> remaining)
+                    </h2>
+                </div>
+                <span class="text-xs text-slate-500 hidden sm:inline">Drag cards or tap on mobile to auto-select</span>
+            </div>
+
+            <div id="cards-pool" class="min-h-[110px] p-3 rounded-xl bg-slate-950/50 border border-slate-800/70 flex flex-wrap gap-3 items-center justify-start transition-all">
+                <!-- Cards will be injected dynamically -->
+            </div>
+        </section>
+
+        <!-- Category Drop Zones Grid -->
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 flex-1">
+
+            <!-- Category 1: Academic Background -->
+            <div data-category="academic" class="drop-zone bg-slate-900/50 border-2 border-dashed border-sky-500/30 hover:border-sky-400/60 rounded-2xl p-4 flex flex-col gap-3 transition-all duration-200 group">
+                <div class="flex items-center justify-between pb-3 border-b border-sky-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/30 text-sky-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="font-bold text-sm text-sky-100">Academic Background</h3>
+                    </div>
+                    <span class="category-count bg-sky-500/10 text-sky-300 text-xs px-2 py-0.5 rounded-md font-mono border border-sky-500/20">0/1</span>
+                </div>
+                <div class="drop-target min-h-[160px] flex-1 flex flex-col gap-2.5 rounded-xl transition-colors p-1">
+                    <div class="empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none">
+                        Drop Academic items here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 2: Experience -->
+            <div data-category="experience" class="drop-zone bg-slate-900/50 border-2 border-dashed border-emerald-500/30 hover:border-emerald-400/60 rounded-2xl p-4 flex flex-col gap-3 transition-all duration-200 group">
+                <div class="flex items-center justify-between pb-3 border-b border-emerald-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <h3 class="font-bold text-sm text-emerald-100">Experience</h3>
+                    </div>
+                    <span class="category-count bg-emerald-500/10 text-emerald-300 text-xs px-2 py-0.5 rounded-md font-mono border border-emerald-500/20">0/3</span>
+                </div>
+                <div class="drop-target min-h-[160px] flex-1 flex flex-col gap-2.5 rounded-xl transition-colors p-1">
+                    <div class="empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none">
+                        Drop Experience items here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 3: Personal Traits -->
+            <div data-category="traits" class="drop-zone bg-slate-900/50 border-2 border-dashed border-purple-500/30 hover:border-purple-400/60 rounded-2xl p-4 flex flex-col gap-3 transition-all duration-200 group">
+                <div class="flex items-center justify-between pb-3 border-b border-purple-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-400/30 text-purple-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <h3 class="font-bold text-sm text-purple-100">Personal Traits</h3>
+                    </div>
+                    <span class="category-count bg-purple-500/10 text-purple-300 text-xs px-2 py-0.5 rounded-md font-mono border border-purple-500/20">0/4</span>
+                </div>
+                <div class="drop-target min-h-[160px] flex-1 flex flex-col gap-2.5 rounded-xl transition-colors p-1">
+                    <div class="empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none">
+                        Drop Traits here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 4: Interests -->
+            <div data-category="interests" class="drop-zone bg-slate-900/50 border-2 border-dashed border-amber-500/30 hover:border-amber-400/60 rounded-2xl p-4 flex flex-col gap-3 transition-all duration-200 group">
+                <div class="flex items-center justify-between pb-3 border-b border-amber-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <h3 class="font-bold text-sm text-amber-100">Interests</h3>
+                    </div>
+                    <span class="category-count bg-amber-500/10 text-amber-300 text-xs px-2 py-0.5 rounded-md font-mono border border-amber-500/20">0/4</span>
+                </div>
+                <div class="drop-target min-h-[160px] flex-1 flex flex-col gap-2.5 rounded-xl transition-colors p-1">
+                    <div class="empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none">
+                        Drop Interests here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 5: Hobbies & Free Time -->
+            <div data-category="hobbies" class="drop-zone bg-slate-900/50 border-2 border-dashed border-rose-500/30 hover:border-rose-400/60 rounded-2xl p-4 flex flex-col gap-3 transition-all duration-200 group">
+                <div class="flex items-center justify-between pb-3 border-b border-rose-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-400/30 text-rose-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <h3 class="font-bold text-sm text-rose-100">Hobbies & Free Time</h3>
+                    </div>
+                    <span class="category-count bg-rose-500/10 text-rose-300 text-xs px-2 py-0.5 rounded-md font-mono border border-rose-500/20">0/5</span>
+                </div>
+                <div class="drop-target min-h-[160px] flex-1 flex flex-col gap-2.5 rounded-xl transition-colors p-1">
+                    <div class="empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none">
+                        Drop Hobbies here
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Celebration Victory Modal -->
+    <div id="win-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col items-center gap-5 relative overflow-hidden" id="win-modal-card">
+            
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+
+            <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-500 to-emerald-400 p-1 flex items-center justify-center shadow-lg shadow-indigo-500/30 animate-bounce">
+                <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-emerald-400 text-3xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Challenge Completed!</h2>
+                <p class="text-sm text-slate-400 mt-1">Outstanding job! You accurately sorted all profile traits and details.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full my-1">
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex flex-col items-center">
+                    <span class="text-xs text-slate-400">Total Time</span>
+                    <span class="text-lg font-mono font-bold text-amber-300 mt-1" id="modal-time">00:00</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex flex-col items-center">
+                    <span class="text-xs text-slate-400">Accuracy</span>
+                    <span class="text-lg font-mono font-bold text-emerald-400 mt-1" id="modal-accuracy">100%</span>
+                </div>
+            </div>
+
+            <!-- Star Rating -->
+            <div class="flex gap-2 text-2xl text-amber-400" id="star-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <button id="play-again-btn" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-base shadow-lg shadow-indigo-600/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i>
+                <span>Play Again</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Application JavaScript Code -->
+    <script>
+        // Data Definitions
+        const ALL_ITEMS = [
+            // Category: Academic Background
+            { id: 'item_1', text: 'University', category: 'academic', icon: 'fa-graduation-cap' },
+            
+            // Category: Experience
+            { id: 'item_2', text: 'Hapkido (Kids)', category: 'experience', icon: 'fa-user-ninja' },
+            { id: 'item_3', text: 'Monitoring E.C. (Teens)', category: 'experience', icon: 'fa-user-shield' },
+            { id: 'item_4', text: 'Private tutor for the last 2 years', category: 'experience', icon: 'fa-chalkboard-user' },
+            
+            // Category: Personal Traits
+            { id: 'item_5', text: 'Diligent (responsible, disciplined & goal-oriented)', category: 'traits', icon: 'fa-bullseye' },
+            { id: 'item_6', text: 'Active person', category: 'traits', icon: 'fa-bolt' },
+            { id: 'item_7', text: 'Patient person', category: 'traits', icon: 'fa-heart' },
+            { id: 'item_8', text: 'Very teachable', category: 'traits', icon: 'fa-brain' },
+            
+            // Category: Interests
+            { id: 'item_9', text: 'Teaching', category: 'interests', icon: 'fa-book-open-reader' },
+            { id: 'item_10', text: 'Environmental care', category: 'interests', icon: 'fa-seedling' },
+            { id: 'item_11', text: 'Working with kids', category: 'interests', icon: 'fa-child-reaching' },
+            { id: 'item_12', text: 'Learning English', category: 'interests', icon: 'fa-language' },
+            
+            // Category: Hobbies & Free Time
+            { id: 'item_13', text: 'Going fishing', category: 'hobbies', icon: 'fa-fish' },
+            { id: 'item_14', text: 'Riding motorcycles', category: 'hobbies', icon: 'fa-motorcycle' },
+            { id: 'item_15', text: 'Enjoying nature', category: 'hobbies', icon: 'fa-tree' },
+            { id: 'item_16', text: 'Outdoor adventures', category: 'hobbies', icon: 'fa-mountain-sun' },
+            { id: 'item_17', text: 'Going hiking', category: 'hobbies', icon: 'fa-person-hiking' }
+        ];
+
+        const CATEGORIES_CONFIG = {
+            academic: { name: 'Academic Background', max: 1, border: 'border-sky-500/40', bg: 'bg-sky-500/10' },
+            experience: { name: 'Experience', max: 3, border: 'border-emerald-500/40', bg: 'bg-emerald-500/10' },
+            traits: { name: 'Personal Traits', max: 4, border: 'border-purple-500/40', bg: 'bg-purple-500/10' },
+            interests: { name: 'Interests', max: 4, border: 'border-amber-500/40', bg: 'bg-amber-500/10' },
+            hobbies: { name: 'Hobbies & Free Time', max: 5, border: 'border-rose-500/40', bg: 'bg-rose-500/10' }
+        };
+
+        // State variables
+        let matchedCount = 0;
+        let totalAttempts = 0;
+        let hintsUsed = 0;
+        let soundEnabled = true;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let gameStarted = false;
+        let draggedElement = null;
+        let touchGhost = null;
+        let currentTouchTargetZone = null;
+
+        // Audio Context (Web Audio API Synthesizer)
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'pickup') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(450, now + 0.08);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'win') {
+                    // Win fanfare
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        g.gain.setValueAtTime(0.2, now + idx * 0.12);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+                        o.start(now + idx * 0.12);
+                        o.stop(now + idx * 0.12 + 0.35);
+                    });
+                }
+            } catch (e) {
+                console.log('Audio playback error:', e);
+            }
+        }
+
+        // Shuffle utility
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Timer Functions
+        function startTimer() {
+            if (gameStarted) return;
+            gameStarted = true;
+            timerSeconds = 0;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            gameStarted = false;
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const secs = (timerSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer-text').textContent = `${mins}:${secs}`;
+        }
+
+        // Toast feedback
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-emerald-900/90 border-emerald-500/50 text-emerald-100' :
+                            type === 'error' ? 'bg-rose-900/90 border-rose-500/50 text-rose-100' :
+                            'bg-indigo-900/90 border-indigo-500/50 text-indigo-100';
+
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' :
+                         type === 'error' ? 'fa-circle-xmark text-rose-400' :
+                         'fa-circle-info text-indigo-400';
+
+            toast.className = `flex items-center gap-3 p-3 rounded-xl border shadow-xl backdrop-blur-md transition-all duration-300 animate-pop-in ${bgColor}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-lg"></i>
+                <span class="text-xs font-semibold">${message}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // Initialize / Reset Game
+        function initGame() {
+            stopTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            matchedCount = 0;
+            totalAttempts = 0;
+            hintsUsed = 0;
+            
+            document.getElementById('score-text').textContent = `0 / ${ALL_ITEMS.length}`;
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('win-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('win-modal-card').classList.add('scale-95');
+
+            // Clear drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const target = zone.querySelector('.drop-target');
+                target.innerHTML = '';
+                const cat = zone.dataset.category;
+                const placeholder = document.createElement('div');
+                placeholder.className = 'empty-placeholder text-slate-600 text-xs font-medium text-center py-10 my-auto border border-dashed border-slate-800 rounded-xl pointer-events-none';
+                placeholder.textContent = `Drop ${CATEGORIES_CONFIG[cat].name} items here`;
+                target.appendChild(placeholder);
+
+                // Reset badge
+                const countBadge = zone.querySelector('.category-count');
+                countBadge.textContent = `0/${CATEGORIES_CONFIG[cat].max}`;
+            });
+
+            // Populate Shuffled Cards Pool
+            const pool = document.getElementById('cards-pool');
+            pool.innerHTML = '';
+            
+            const shuffled = shuffleArray(ALL_ITEMS);
+            document.getElementById('pool-count').textContent = shuffled.length;
+
+            shuffled.forEach(item => {
+                const card = createCardElement(item);
+                pool.appendChild(card);
+            });
+        }
+
+        // Create Individual Card DOM Element
+        function createCardElement(item) {
+            const card = document.createElement('div');
+            card.id = item.id;
+            card.dataset.category = item.category;
+            card.dataset.itemText = item.text;
+            card.draggable = true;
+            card.className = `card-item cursor-grab active:cursor-grabbing bg-slate-800/90 hover:bg-slate-750 border border-slate-700/80 hover:border-indigo-500/50 rounded-xl p-3 shadow-md hover:shadow-indigo-500/10 flex items-center justify-between gap-3 text-xs sm:text-sm font-medium transition-all duration-200 select-none group touch-none`;
+
+            card.innerHTML = `
+                <div class="flex items-center gap-2.5 pointer-events-none">
+                    <i class="fa-solid ${item.icon} text-indigo-400 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-slate-200 leading-snug">${item.text}</span>
+                </div>
+                <i class="fa-solid fa-grip-vertical text-slate-600 group-hover:text-slate-400 text-xs pointer-events-none"></i>
+            `;
+
+            // Setup Desktop Drag Events
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+
+            // Setup Touch Events for Mobile
+            card.addEventListener('touchstart', handleTouchStart, { passive: false });
+            card.addEventListener('touchmove', handleTouchMove, { passive: false });
+            card.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+            return card;
+        }
+
+        // --- HTML5 Desktop Drag Handlers ---
+        function handleDragStart(e) {
+            startTimer();
+            initAudio();
+            draggedElement = this;
+            e.dataTransfer.setData('text/plain', this.id);
+            e.dataTransfer.effectAllowed = 'move';
+            this.classList.add('opacity-40', 'scale-95');
+            playSound('pickup');
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('opacity-40', 'scale-95');
+            draggedElement = null;
+            clearDropHighlights();
+        }
+
+        // Setup Drop Zones Event Listeners
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                zone.classList.add('border-indigo-400', 'bg-indigo-950/20');
+            });
+
+            zone.addEventListener('dragleave', (e) => {
+                zone.classList.remove('border-indigo-400', 'bg-indigo-950/20');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('border-indigo-400', 'bg-indigo-950/20');
+                
+                const cardId = e.dataTransfer.getData('text/plain');
+                const card = document.getElementById(cardId);
+                if (card) {
+                    processDrop(card, zone);
+                }
+            });
+        });
+
+        // --- Mobile Touch Drag Handlers ---
+        function handleTouchStart(e) {
+            startTimer();
+            initAudio();
+            draggedElement = this;
+            const touch = e.touches[0];
+
+            // Create Touch Drag Ghost Element
+            touchGhost = this.cloneNode(true);
+            touchGhost.classList.add('fixed', 'z-50', 'pointer-events-none', 'shadow-2xl', 'opacity-90', 'scale-105', 'w-64');
+            touchGhost.style.left = `${touch.clientX - 100}px`;
+            touchGhost.style.top = `${touch.clientY - 25}px`;
+            document.body.appendChild(touchGhost);
+
+            this.classList.add('opacity-30');
+            playSound('pickup');
+        }
+
+        function handleTouchMove(e) {
+            if (!touchGhost) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchGhost.style.left = `${touch.clientX - 100}px`;
+            touchGhost.style.top = `${touch.clientY - 25}px`;
+
+            // Detect target zone under element
+            const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const dropZone = elemBelow ? elemBelow.closest('.drop-zone') : null;
+
+            if (currentTouchTargetZone !== dropZone) {
+                if (currentTouchTargetZone) {
+                    currentTouchTargetZone.classList.remove('border-indigo-400', 'bg-indigo-950/20');
+                }
+                if (dropZone) {
+                    dropZone.classList.add('border-indigo-400', 'bg-indigo-950/20');
+                }
+                currentTouchTargetZone = dropZone;
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!draggedElement) return;
+            draggedElement.classList.remove('opacity-30');
+
+            if (touchGhost) {
+                touchGhost.remove();
+                touchGhost = null;
+            }
+
+            if (currentTouchTargetZone) {
+                currentTouchTargetZone.classList.remove('border-indigo-400', 'bg-indigo-950/20');
+                processDrop(draggedElement, currentTouchTargetZone);
+                currentTouchTargetZone = null;
+            }
+
+            draggedElement = null;
+        }
+
+        function clearDropHighlights() {
+            document.querySelectorAll('.drop-zone').forEach(z => {
+                z.classList.remove('border-indigo-400', 'bg-indigo-950/20');
+            });
+        }
+
+        // Core Validation Logic for Drops
+        function processDrop(card, targetZone) {
+            totalAttempts++;
+            const cardCategory = card.dataset.category;
+            const targetCategory = targetZone.dataset.category;
+            const targetContentArea = targetZone.querySelector('.drop-target');
+
+            if (cardCategory === targetCategory) {
+                // Correct Match
+                playSound('success');
+                showToast(`Correct! "${card.dataset.itemText}" matches ${CATEGORIES_CONFIG[targetCategory].name}.`, 'success');
+
+                // Remove placeholder if present
+                const placeholder = targetContentArea.querySelector('.empty-placeholder');
+                if (placeholder) placeholder.remove();
+
+                // Lock Card into Drop Target
+                card.draggable = false;
+                card.className = `card-item bg-emerald-950/40 border border-emerald-500/50 rounded-xl p-3 text-xs sm:text-sm font-medium flex items-center justify-between gap-3 text-emerald-100 shadow-sm animate-pop-in cursor-default`;
+                card.querySelector('.fa-grip-vertical')?.remove();
+
+                // Add checkmark badge
+                const checkIcon = document.createElement('i');
+                checkIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-sm ml-auto';
+                card.appendChild(checkIcon);
+
+                targetContentArea.appendChild(card);
+
+                // Update Stats
+                matchedCount++;
+                updateProgress();
+
+                if (matchedCount === ALL_ITEMS.length) {
+                    setTimeout(triggerVictory, 400);
+                }
+            } else {
+                // Incorrect Match
+                playSound('error');
+                showToast(`Not quite! "${card.dataset.itemText}" doesn't belong in ${CATEGORIES_CONFIG[targetCategory].name}.`, 'error');
+
+                // Shake animation on card
+                card.classList.add('animate-shake', 'border-rose-500/80', 'bg-rose-950/30');
+                setTimeout(() => {
+                    card.classList.remove('animate-shake', 'border-rose-500/80', 'bg-rose-950/30');
+                }, 500);
+            }
+        }
+
+        // Update counts and progress bar
+        function updateProgress() {
+            // Update pool counter
+            const poolCards = document.getElementById('cards-pool').querySelectorAll('.card-item');
+            document.getElementById('pool-count').textContent = poolCards.length;
+
+            // Update matched score display
+            document.getElementById('score-text').textContent = `${matchedCount} / ${ALL_ITEMS.length}`;
+
+            // Update bar width
+            const pct = Math.round((matchedCount / ALL_ITEMS.length) * 100);
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+
+            // Update category badges
+            Object.keys(CATEGORIES_CONFIG).forEach(cat => {
+                const zone = document.querySelector(`.drop-zone[data-category="${cat}"]`);
+                const itemsInZone = zone.querySelectorAll('.card-item').length;
+                const badge = zone.querySelector('.category-count');
+                badge.textContent = `${itemsInZone}/${CATEGORIES_CONFIG[cat].max}`;
+                
+                if (itemsInZone === CATEGORIES_CONFIG[cat].max) {
+                    badge.classList.remove('bg-slate-800', 'text-slate-400');
+                    badge.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border-emerald-500/40');
+                }
+            });
+        }
+
+        // Hint System
+        document.getElementById('hint-btn').addEventListener('click', () => {
+            initAudio();
+            const remainingCards = Array.from(document.querySelectorAll('#cards-pool .card-item'));
+            if (remainingCards.length === 0) {
+                showToast('All items are already sorted!', 'info');
+                return;
+            }
+
+            hintsUsed++;
+            const randomCard = remainingCards[Math.floor(Math.random() * remainingCards.length)];
+            const correctCat = randomCard.dataset.category;
+            const targetZone = document.querySelector(`.drop-zone[data-category="${correctCat}"]`);
+
+            // Visual pulse on card and zone
+            randomCard.classList.add('ring-2', 'ring-amber-400', 'bg-amber-950/40', 'scale-105');
+            targetZone.classList.add('ring-2', 'ring-amber-400', 'bg-amber-950/30');
+
+            showToast(`Hint: "${randomCard.dataset.itemText}" goes to "${CATEGORIES_CONFIG[correctCat].name}"!`, 'info');
+
+            setTimeout(() => {
+                randomCard.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-950/40', 'scale-105');
+                targetZone.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-950/30');
+            }, 3000);
+        });
+
+        // Trigger Victory Celebration
+        function triggerVictory() {
+            stopTimer();
+            playSound('win');
+
+            // Fire confetti burst
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Calculate accuracy percentage
+            const accuracy = Math.round((ALL_ITEMS.length / Math.max(totalAttempts, ALL_ITEMS.length)) * 100);
+
+            document.getElementById('modal-time').textContent = document.getElementById('timer-text').textContent;
+            document.getElementById('modal-accuracy').textContent = `${accuracy}%`;
+
+            // Calculate star rating
+            const starContainer = document.getElementById('star-rating');
+            starContainer.innerHTML = '';
+            let stars = 5;
+            if (accuracy < 70 || hintsUsed > 3) stars = 3;
+            else if (accuracy < 85 || hintsUsed > 1) stars = 4;
+
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('i');
+                star.className = i < stars ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-slate-600';
+                starContainer.appendChild(star);
+            }
+
+            // Show Win Modal
+            const modal = document.getElementById('win-modal');
+            const modalCard = document.getElementById('win-modal-card');
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalCard.classList.remove('scale-95');
+            modalCard.classList.add('scale-100');
+        }
+
+        // Toggle Audio Button
+        document.getElementById('sound-btn').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                showToast('Sound effects enabled', 'info');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+                showToast('Sound effects muted', 'info');
+            }
+        });
+
+        // Reset & Play Again Handlers
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            initGame();
+            showToast('Game has been reset', 'info');
+        });
+
+        document.getElementById('play-again-btn').addEventListener('click', () => {
+            initGame();
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initGame();
+        });
+    </script>
+</body>
+</html>
